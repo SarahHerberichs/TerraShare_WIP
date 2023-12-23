@@ -1,5 +1,13 @@
 controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
+  resource:
+    path: ../src/Controller/
+    namespace: App\Controller
+  type: attribute
+
+get_department:
+  path: "/getDepartment/{id}"
+  controller: App\Controller\AdsController::getDepartment
+
+get_cities:
+  path: "/get-cities/{departmentNumber}"
+  controller: App\Controller\AdsController::getCities

@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{# templates/ads/index.html.twig #}
+
+
+{% block title %}
+    Liste des Départements
+{% endblock %}
+
+{% block body %}
+    <h1>Ads</h1>
+
+    <label for="departments">Choose a department:</label>
+    <select id="departments" name="departments">
+        {% for department in departments %}
+            <option value="{{ department.number }}">{{ department.name }}</option>
+        {% endfor %}
+    </select>
+    <p id= "selectedDepartment"></p>
+    <div id="citiesList"></div>
+{% endblock %}
