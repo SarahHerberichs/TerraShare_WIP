@@ -4,14 +4,14 @@ namespace App\Controller;
 
 use DateTime;
 use App\Entity\Ads;
-use App\Entity\Photos;
 use App\Form\AdsType;
+use App\Entity\Photos;
 use App\Repository\AdsRepository;
 use App\Repository\CitiesRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\DepartmentsRepository;
 use App\Repository\PhotosRepository;
 use App\Services\SimpleUploadService;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\DepartmentsRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,7 +19,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-// use Symfony\Component\Messenger\Transport\Serialization\Serializer;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
 
 
 class AdsController extends AbstractController
@@ -34,7 +35,7 @@ class AdsController extends AbstractController
             'departments' => $departments
         ]);
     }
-
+    //Récupération des données transmises par le code location.js qui transmets des données à l'url get-cities...
     #[Route('/get-cities/{departmentNumber}', name: 'get_cities')]
     public function getCities(
         string $departmentNumber,
@@ -42,9 +43,9 @@ class AdsController extends AbstractController
         CitiesRepository $citiesRepository,
         SerializerInterface $serializer
     ): Response {
+        //extrait la valeur du parametre de requete "search"-si pas de parametre,utilise valeur nulle
         $searchQuery = $request->query->get('search', '');
-    
-        // Utilisez $searchQuery pour filtrer vos résultats
+        //Voir Methode dans Repository
         $cities = $citiesRepository->findBySearchQuery($departmentNumber, $searchQuery);
     
         $jsonData = $serializer->serialize($cities, 'json', [
@@ -66,17 +67,20 @@ class AdsController extends AbstractController
          $cityId,
          CitiesRepository $citiesRepository,
           EntityManagerInterface $em,
+          TokenStorageInterface $tokenStorage,
           SimpleUploadService $simpleUploadService): Response
     {
+        $user = $tokenStorage->getToken()->getUser();
+     
         $city = $citiesRepository->find($cityId);
-      
+       
         if (!$city) {
             throw $this->createNotFoundException('City not found');
         }
 
         $ad = new Ads();
         $ad->setCity($city);
- 
+        $ad->setUser($user);
         $form = $this->createForm(AdsType::class, $ad, ['city' => $city]);
         $form->handleRequest($request);
         
@@ -133,6 +137,22 @@ class AdsController extends AbstractController
             'ads' => $ads,
             'departments' => $departments,
             'selectedDepartment' => $selectedDepartment,
+        ]);
+    }
+
+    #[Route('/consult-ad/{id}', name: 'app_consult_ad_by_id')]
+    public function consultAdById(
+        int $id,
+        AdsRepository $adsRepository,
+        PhotosRepository $photosRepository
+    ):Response
+        {
+        $ad = $adsRepository->findOneById($id);
+        $photos= $photosRepository->findByAdId($id);
+     
+        return $this->render('ads/consult_ad_by_id.html.twig', [
+            'ad' => $ad,
+            'photos'=> $photos
         ]);
     }
 }

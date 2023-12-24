@@ -23,7 +23,7 @@ class Ads
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 2000)]
     private ?string $text = null;
 
     #[ORM\ManyToOne(inversedBy: 'ads')]
@@ -32,6 +32,9 @@ class Ads
 
     #[ORM\OneToMany(mappedBy: 'ad', targetEntity: Photos::class, cascade:['persist'])]
     private Collection $photos;
+
+     #[ORM\ManyToOne(inversedBy: 'ads')]
+     private ?User $user = null;
 
    
     public function __construct()
@@ -120,6 +123,18 @@ class Ads
                 $photo->setAd(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

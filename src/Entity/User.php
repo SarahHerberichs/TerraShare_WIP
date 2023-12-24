@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -20,8 +22,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
+    // #[ORM\Column]
+    // private array $roles = ['ROLE_USER'];
     #[ORM\Column]
-    private array $roles = ['ROLE_USER'];
+    private array $roles = [];
 
     /**
      * @var string The hashed password
@@ -31,6 +35,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Ads::class)]
+    private Collection $ads;
+
+    public function __construct()
+    {
+        $this->roles = ['ROLE_USER'];
+        $this->ads = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -110,6 +123,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ads>
+     */
+    public function getAds(): Collection
+    {
+        return $this->ads;
+    }
+
+    public function addAd(Ads $ad): static
+    {
+        if (!$this->ads->contains($ad)) {
+            $this->ads->add($ad);
+            $ad->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAd(Ads $ad): static
+    {
+        if ($this->ads->removeElement($ad)) {
+            // set the owning side to null (unless already changed)
+            if ($ad->getUser() === $this) {
+                $ad->setUser(null);
+            }
+        }
 
         return $this;
     }

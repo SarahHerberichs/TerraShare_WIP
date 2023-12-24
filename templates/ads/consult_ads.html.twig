@@ -29,14 +29,15 @@
                 <li class="each-ad">
                 <div class="text-content">
                     <h3>{{ ad.title }}</h3> 
-                    <p>{{ ad.text }}</p> 
                     <p>{{ ad.city.name }}</p>
                 </div>
                    {% for photo in ad.photos %}
                     {% if loop.first %}
+                     <a href="{{ path('app_consult_ad_by_id', {'id': ad.id}) }}">
                         <div class="img-container img-list">
                             <img src="{{ asset('img/' ~ photo.name)}}" alt="" class="img-ad img-list card-img-top mt-3">   
                         </div>
+                    </a>
                         {% endif %}
                    {% endfor %}
                 </li>

@@ -1,60 +1,20 @@
-// document.addEventListener("DOMContentLoaded", function () {
-//   var departmentsSelect = document.getElementById("departments");
-//   var citiesList = document.getElementById("citiesList");
-
-//   departmentsSelect.addEventListener("change", function () {
-//     var selectedDepartmentNumber = departmentsSelect.value;
-
-//     var xhr = new XMLHttpRequest();
-//     xhr.onreadystatechange = function () {
-//       if (xhr.readyState === 4) {
-//         if (xhr.status === 200) {
-//           // Parsez la réponse JSON
-//           var citiesData = JSON.parse(xhr.responseText);
-
-//           // Mettez à jour le contenu de la liste des villes
-//           citiesList.innerHTML = "";
-
-//           citiesData.forEach(function (city) {
-//             // Ajoutez chaque ville à la liste
-//             var listItem = document.createElement("li");
-//             listItem.textContent = city.name;
-
-//             var listItem = document.createElement("li");
-//             listItem.textContent = city.name;
-
-//             // Ajoutez un gestionnaire d'événements pour le clic
-//             listItem.addEventListener("click", function () {
-//               // Affichez l'ID de la ville dans la console
-//               window.location.href = "/create-ad/" + city.id; // Assurez-vous que votre objet City a une propriété 'id'
-//             });
-
-//             citiesList.appendChild(listItem);
-//           });
-//         } else {
-//           alert("Erreur de requête AJAX : " + xhr.status);
-//         }
-//       }
-//     };
-
-//     xhr.open("GET", "/get-cities/" + selectedDepartmentNumber, true);
-//     xhr.send();
-//   });
-// });
-
 document.addEventListener("DOMContentLoaded", function () {
   var departmentsSelect = document.getElementById("departments");
   var citySearchInput = document.getElementById("citySearch");
   var citiesList = document.getElementById("citiesList");
 
   function updateCitiesList(departmentNumber, searchQuery = "") {
+    //Pour execution de requete asynchrone
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
+      //Le statut est à 4 lorsquela requête est terminée
       if (xhr.readyState === 4) {
+        //le status est 200 si la requête a abouti
         if (xhr.status === 200) {
+          //Parse la réponse JSON de la requete
           var citiesData = JSON.parse(xhr.responseText);
           citiesList.innerHTML = "";
-
+          //Pour chaque city crée une div qui contiendra une span avec le city.name
           citiesData.forEach(function (city) {
             var cityContainer = document.createElement("div");
             cityContainer.className = "city-item";
@@ -63,11 +23,11 @@ document.addEventListener("DOMContentLoaded", function () {
             cityName.textContent = city.name;
 
             cityContainer.appendChild(cityName);
-
+            //Fonction de redirection au click sur une ville
             cityContainer.addEventListener("click", function () {
               window.location.href = "/create-ad/" + city.id;
             });
-
+            //Injection dans la div vide initiale des villes
             citiesList.appendChild(cityContainer);
           });
         } else {
@@ -77,11 +37,11 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     var url = "/get-cities/" + departmentNumber;
-
+    //vérifie que le parametre passé à la fonction n'est pas vide, si pas vide l'ajoute à l'url en format encodé pour transmettre la chaine de recherche au server
     if (searchQuery !== "") {
       url += "?search=" + encodeURIComponent(searchQuery);
     }
-
+    ///ouverture et envoi de la requete
     xhr.open("GET", url, true);
     xhr.send();
   }

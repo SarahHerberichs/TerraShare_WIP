@@ -20,6 +20,14 @@ class PhotosRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Photos::class);
     }
+    public function findByAdId(int $adId): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.ad = :adId')
+            ->setParameter('adId', $adId)
+            ->getQuery()
+            ->getResult();
+    }
 
 //    /**
 //     * @return Photos[] Returns an array of Photos objects

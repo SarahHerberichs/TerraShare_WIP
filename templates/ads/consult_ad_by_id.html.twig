@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    <script src= "{{asset('js/adById.js')}}"></script>
+{% endblock %}
+
+{% block title %}Toutes les annonces{% endblock %}
+
+{% block body %}
+    {# <h1>Annonce à {{ ad.city.name }}</h1> #}
+   
+     <h3>{{ ad.title }}</h3> 
+    <p>{{ ad.text }}</p> 
+    <p>{{ ad.city.name }}</p>
+
+  <div id="imageContainer" class="img-container by-id">
+        {% for photo in photos %}
+            <img src="{{ asset('img/' ~ photo.name)}}" alt="" class="img-ad card-img-top mt-3">   
+        {% endfor %}
+    </div>
+   {{ ad.user.email }}
+
+{% endblock %}
