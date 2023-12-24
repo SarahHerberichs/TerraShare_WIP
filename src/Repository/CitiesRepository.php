@@ -21,6 +21,19 @@ class CitiesRepository extends ServiceEntityRepository
         parent::__construct($registry, Cities::class);
     }
 
+    public function findBySearchQuery(string $departmentNumber, string $searchQuery): array
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->andWhere('c.department_number = :departmentNumber')
+            ->setParameter('departmentNumber', $departmentNumber);
+    
+        if (!empty($searchQuery)) {
+            $qb->andWhere('c.name LIKE :searchQuery')
+                ->setParameter('searchQuery', $searchQuery . '%');
+        }
+    
+        return $qb->getQuery()->getResult();
+    }
 //    /**
 //     * @return Cities[] Returns an array of Cities objects
 //     */

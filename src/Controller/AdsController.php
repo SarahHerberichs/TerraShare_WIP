@@ -19,7 +19,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Messenger\Transport\Serialization\Serializer;
+// use Symfony\Component\Messenger\Transport\Serialization\Serializer;
+
 
 class AdsController extends AbstractController
 {
@@ -28,50 +29,77 @@ class AdsController extends AbstractController
     public function index(DepartmentsRepository $departmentsRepository): Response
     {
         $departments= $departmentsRepository->findBy([], ['number' => 'ASC']);
+    
         return $this->render('ads/location.html.twig', [
             'departments' => $departments
         ]);
     }
-    // #[Route('/getDepartment/{id}', name: 'get_department')]
-    // public function getDepartment(DepartmentsRepository $departmentsRepository, int $id): JsonResponse
-    // {
-    //     $department = $departmentsRepository->find($id);
 
-    //     if (!$department) {
-    //         throw $this->createNotFoundException('Department not found');
-    //     }
-    //     return $this->json([
-    //         'id' => $department->getId(),
-    //         'name' => $department->getName(),
-    //     ]);
-    // }
 
     //Pour récupération de toutes les villes associées au DPT selectionné (voir traitement JS)
-    #[Route('/get-cities/{departmentNumber}', name: 'get_cities')]
-    public function getCities(string $departmentNumber, CitiesRepository $citiesRepository, SerializerInterface $serializer): Response
-    {
+    // #[Route('/get-cities/{departmentNumber}', name: 'get_cities')]
+    // public function getCities(
+        // string $departmentNumber,
+        //  CitiesRepository $citiesRepository,
+        //   SerializerInterface $serializer): Response
+    // {
     
-        $cities = $citiesRepository->findBy(['department_number' => $departmentNumber]);
+    //     $cities = $citiesRepository->findBy(['department_number' => $departmentNumber]);
 
 
+    //     $jsonData = $serializer->serialize($cities, 'json', [
+    //         AbstractNormalizer::IGNORED_ATTRIBUTES => ['department_number'], // Adjust this based on your City entity
+    //     ]);
+
+    //     // Create a JsonResponse
+    //     $response = new JsonResponse($jsonData, JsonResponse::HTTP_OK, [], true);
+
+    //     return $response;
+    // }
+    // #[Route('/get-cities/{departmentNumber}', name: 'get_cities')]
+    // public function getCities(
+    //     string $departmentNumber,
+    //     Request $request,
+    //     CitiesRepository $citiesRepository,
+    //     SerializerInterface $serializer
+    // ): Response {
+    //     $searchQuery = $request->query->get('search', '');
+    
+    //     // Utilisez $searchQuery pour filtrer vos résultats
+    //     $cities = $citiesRepository->findBySearchQuery($departmentNumber, $searchQuery);
+    
+    //     $jsonData = $serializer->serialize($cities, 'json', [
+    //         AbstractNormalizer::IGNORED_ATTRIBUTES => ['department_number'],
+    //     ]);
+    
+    //     // Create a JsonResponse
+    //     $response = new JsonResponse($jsonData, JsonResponse::HTTP_OK, [], true);
+    
+    //     return $response;
+    // }
+    #[Route('/get-cities/{departmentNumber}', name: 'get_cities')]
+    public function getCities(
+        string $departmentNumber,
+        Request $request,
+        CitiesRepository $citiesRepository,
+        SerializerInterface $serializer
+    ): Response {
+        $searchQuery = $request->query->get('search', '');
+    
+        // Utilisez $searchQuery pour filtrer vos résultats
+        $cities = $citiesRepository->findBySearchQuery($departmentNumber, $searchQuery);
+    
         $jsonData = $serializer->serialize($cities, 'json', [
-            AbstractNormalizer::IGNORED_ATTRIBUTES => ['department_number'], // Adjust this based on your City entity
+            'groups' => ['exclude_ads'], // Ajoutez le groupe pour exclure les références circulaires
+            AbstractNormalizer::IGNORED_ATTRIBUTES => ['department_number'],
         ]);
-
+    
         // Create a JsonResponse
         $response = new JsonResponse($jsonData, JsonResponse::HTTP_OK, [], true);
-
+    
         return $response;
     }
 
-    // #[Route('/ads/{cityId}', name:'get_ads_byCity')]
-    // public function getAdsByCity ($cityId , CitiesRepository $citiesRepository) {
-    //     $city = $citiesRepository->findOneBy(['id' => $cityId]);
-   
-    //     return $this->render('ads/ads_by_city.html.twig', [
-    //         'city' => $city
-    //     ]);
-    // }
 
     //Formulaire de création d'annonce (lié à l'entité Cities)
     #[Route('/create-ad/{cityId}', name: 'create_ad')]
@@ -147,7 +175,6 @@ class AdsController extends AbstractController
             'ads' => $ads,
             'departments' => $departments,
             'selectedDepartment' => $selectedDepartment,
-            
         ]);
     }
 }

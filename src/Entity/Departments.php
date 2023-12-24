@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\DepartmentsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\DepartmentsRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: DepartmentsRepository::class)]
 class Departments
@@ -35,7 +36,7 @@ class Departments
 
         return $this;
     }
-
+    #[Groups(['default'])]
     public function getNumber(): ?string
     {
         return $this->number;

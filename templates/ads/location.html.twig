@@ -1,7 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {# templates/ads/index.html.twig #}
+{% block javascripts %}
+    <script src= "{{asset('js/location.js')}}"></script>
+{% endblock %}
 
+{% block stylesheets %}
+{{ parent() }}
+      <link rel="stylesheet" href="{{asset('css/location.css')}}"/>
+{% endblock %}
 
 {% block title %}
     Liste des Départements
@@ -13,9 +20,13 @@
     <label for="departments">Choose a department:</label>
     <select id="departments" name="departments">
         {% for department in departments %}
-            <option value="{{ department.number }}">{{ department.name }}</option>
+            <option value="{{ department.number }}">{{ department.number }} - {{ department.name }}</option>
         {% endfor %}
     </select>
     <p id= "selectedDepartment"></p>
+
+    <label for="citySearch">Search for a city:</label>
+    <input type="text" id="citySearch" name="citySearch">
+
     <div id="citiesList"></div>
 {% endblock %}

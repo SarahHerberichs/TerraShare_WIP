@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\CitiesRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CitiesRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CitiesRepository::class)]
 class Cities
@@ -13,18 +14,23 @@ class Cities
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['exclude_ads'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['exclude_ads'])]
     private ?string $name = null;
 
     #[ORM\Column]
+    #[Groups(['exclude_ads'])]
     private ?int $zipcode = null;
 
     #[ORM\Column(length: 10)]
+    #[Groups(['exclude_ads'])]
     private ?string $department_number = null;
 
     #[ORM\OneToMany(mappedBy: 'city', targetEntity: Ads::class)]
+
     private Collection $ads;
 
     public function __construct()

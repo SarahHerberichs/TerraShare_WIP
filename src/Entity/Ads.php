@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\AdsRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Photos;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\AdsRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: AdsRepository::class)]
 class Ads
@@ -26,6 +28,7 @@ class Ads
 
     #[ORM\ManyToOne(inversedBy: 'ads')]
     private ?Cities $city = null;
+     #[Groups(['exclude_city'])]
 
     #[ORM\OneToMany(mappedBy: 'ad', targetEntity: Photos::class, cascade:['persist'])]
     private Collection $photos;
