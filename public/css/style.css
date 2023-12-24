@@ -1,6 +1,56 @@
-.img-container {
-  border: 1px solid black;
+.list-ads {
+  width: 80vw;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  margin: auto;
 }
-.img-ad {
-  border: 1px solid red;
+.each-ad {
+  display: grid;
+  grid-template-columns: 1fr; /* Deux colonnes pour chaque élément .each-ad */
+  grid-template-rows: (1fr, 1fr);
+  gap: 10px;
+  width: 100%;
+  padding: 1em;
+  box-sizing: border-box;
+  border: 1px solid black;
+  border-radius: 2em;
+}
+
+.text-content {
+  grid-row: span 1;
+}
+
+.img-container {
+  grid-row: span 1;
+}
+
+@media screen and (min-width: 768px) {
+  .list-ads {
+    display: flex;
+    flex-wrap: wrap;
+    width: 80vw;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .each-ad {
+    grid-template-columns: 1fr 1fr; /* Deux colonnes pour chaque élément .each-ad */
+    grid-template-rows: repeat(3, 1fr);
+    width: 30%;
+    height: 30vh;
+    margin-right: 10px;
+    box-sizing: border-box;
+  }
+
+  .text-content {
+    grid-column: 1; /* Place le texte dans la première colonne */
+    grid-row: span 3; /* Occupe trois lignes */
+  }
+
+  .img-container {
+    grid-column: 2; /* Place la photo dans la deuxième colonne */
+    grid-row: span 3; /* Occupe trois lignes */
+  }
 }

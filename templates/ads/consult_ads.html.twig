@@ -1,9 +1,7 @@
 {# templates/ads/all_ads.html.twig #}
 
 {% extends 'base.html.twig' %}
-  {% block javascripts %}
-    <script src= "{{asset('js/location.js')}}"></script>
-    {% endblock %}
+
 {% block title %}Toutes les annonces{% endblock %}
 
 {% block body %}
@@ -26,16 +24,20 @@
     {% if ads is empty %}
         <p>Aucune annonce pour votre requête.</p>
     {% else %}
-        <ul>
+        <ul class= "list-ads">
            {% for ad in ads %}
-                <li>
+                <li class="each-ad">
+                <div class="text-content">
                     <h3>{{ ad.title }}</h3> 
                     <p>{{ ad.text }}</p> 
                     <p>{{ ad.city.name }}</p>
+                </div>
                    {% for photo in ad.photos %}
-                     <div class="img-container img-list">
-                        <img src="{{ asset('img/' ~ photo.name)}}" alt="" class="img-ad img-list card-img-top mt-3">   
-                    </div>
+                    {% if loop.first %}
+                        <div class="img-container img-list">
+                            <img src="{{ asset('img/' ~ photo.name)}}" alt="" class="img-ad img-list card-img-top mt-3">   
+                        </div>
+                        {% endif %}
                    {% endfor %}
                 </li>
             {% endfor %}
