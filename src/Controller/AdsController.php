@@ -35,48 +35,6 @@ class AdsController extends AbstractController
         ]);
     }
 
-
-    //Pour récupération de toutes les villes associées au DPT selectionné (voir traitement JS)
-    // #[Route('/get-cities/{departmentNumber}', name: 'get_cities')]
-    // public function getCities(
-        // string $departmentNumber,
-        //  CitiesRepository $citiesRepository,
-        //   SerializerInterface $serializer): Response
-    // {
-    
-    //     $cities = $citiesRepository->findBy(['department_number' => $departmentNumber]);
-
-
-    //     $jsonData = $serializer->serialize($cities, 'json', [
-    //         AbstractNormalizer::IGNORED_ATTRIBUTES => ['department_number'], // Adjust this based on your City entity
-    //     ]);
-
-    //     // Create a JsonResponse
-    //     $response = new JsonResponse($jsonData, JsonResponse::HTTP_OK, [], true);
-
-    //     return $response;
-    // }
-    // #[Route('/get-cities/{departmentNumber}', name: 'get_cities')]
-    // public function getCities(
-    //     string $departmentNumber,
-    //     Request $request,
-    //     CitiesRepository $citiesRepository,
-    //     SerializerInterface $serializer
-    // ): Response {
-    //     $searchQuery = $request->query->get('search', '');
-    
-    //     // Utilisez $searchQuery pour filtrer vos résultats
-    //     $cities = $citiesRepository->findBySearchQuery($departmentNumber, $searchQuery);
-    
-    //     $jsonData = $serializer->serialize($cities, 'json', [
-    //         AbstractNormalizer::IGNORED_ATTRIBUTES => ['department_number'],
-    //     ]);
-    
-    //     // Create a JsonResponse
-    //     $response = new JsonResponse($jsonData, JsonResponse::HTTP_OK, [], true);
-    
-    //     return $response;
-    // }
     #[Route('/get-cities/{departmentNumber}', name: 'get_cities')]
     public function getCities(
         string $departmentNumber,

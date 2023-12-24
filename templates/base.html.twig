@@ -23,23 +23,29 @@
 </head>
 
 <body>
-    {% include "_partials/navbar.html.twig" %}
+
+<img src="{{ asset('build/images/logo.png') }}" alt="ACME logo">
 
 
-    {% if app.user and app.user.isVerified == false %}
-    <div class="alert alert-danger alert-dismissible fade show w-50 mx-auto mt-3" role="alert">
-        <strong>ATTENTION ! </strong>
-        <p>Votre compte n'a pas été activé !</p>
-        <p>Merci de valider votre compte via le lien envoyé sur votre boite mail lors de l'inscription.</p>
-        <a href="" class="btn btn-danger mx-5">Renvoyer le lien d'activation</a>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+{% include "_partials/navbar.html.twig" %}  
+
+{% if app.user and app.user.isVerified ==false %}
+<div class="alert alert-danger alert-dissmissible fade show w-50 mx-auto mt-3" role="alert">
+    <strong>ATTENTION</strong>  
+    <p>Votre compte n'a pas été activé ! </p>
+    <p>Merci de valider votre compte via le lien envoyé sur votre boite mail lors de l'inscription</p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% else %}
+    {% if app.user and app.user.isVerified ==true %}
+    <p>Connecté</p>
     {% endif %}
+{% endif %}
 
-    {% include "_partials/alerts.html.twig" %}
-    <div class="container">
-        {% block body %}{% endblock %}
-    </div>
+  {% include "_partials/alerts.html.twig" %}
+  <div class="container">
+      {% block body %}{% endblock %}
+  </div>
 
 </body>
 
