@@ -29,6 +29,14 @@ class AdsRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findByUserId(int $userId): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.user = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
+    }
 //    /**
 //     * @return Ads[] Returns an array of Ads objects
 //     */

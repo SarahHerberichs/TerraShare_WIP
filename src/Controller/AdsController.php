@@ -4,9 +4,14 @@ namespace App\Controller;
 
 use DateTime;
 use App\Entity\Ads;
+use App\Entity\User;
 use App\Form\AdsType;
 use App\Entity\Photos;
+use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Lexer\Token;
 use App\Repository\AdsRepository;
+use App\Repository\UserRepository;
 use App\Repository\CitiesRepository;
 use App\Repository\PhotosRepository;
 use App\Services\SimpleUploadService;
@@ -96,7 +101,6 @@ class AdsController extends AbstractController
                 $new_photos->setName($new_photo);
                 $ad->addPhoto($new_photos);
 
-
             }
             $ad->setCity($form->get('city')->getData());
             $em->persist($ad);
@@ -121,6 +125,7 @@ class AdsController extends AbstractController
          DepartmentsRepository $departmentsRepository,
          PhotosRepository $photosRepository): Response
     {
+
         $ads = $adsRepository->findAll();
       
         $departments = $departmentsRepository->findBy([], ['number' => 'ASC']);    
@@ -148,11 +153,119 @@ class AdsController extends AbstractController
     ):Response
         {
         $ad = $adsRepository->findOneById($id);
+
         $photos= $photosRepository->findByAdId($id);
      
-        return $this->render('ads/consult_ad_by_id.html.twig', [
+        return $this->render('ads/consult_ad_byAdId.html.twig', [
             'ad' => $ad,
             'photos'=> $photos
         ]);
+    }
+    #[Route ('/my-ads', name :'my_ads')]
+    public function myAds (
+        AdsRepository $adsRepository,
+        TokenStorageInterface $tokenStorage
+    ) :Response 
+    {
+      // Récupérer l'utilisateur actuellement authentifié
+        $user = $tokenStorage->getToken()->getUser();
+        $userId = $user instanceof User ? $user->getId() : null;
+    
+        $userAds = $adsRepository->findByUserId($userId);
+
+        return $this->render('ads/my_ads.html.twig', [
+            'userAds' => $userAds,
+            'user' => $user
+        
+        ]);
+    }
+    #[Route('/my-ads/edit/{adId}', name: 'app_ad_edit')]
+    public function editAd(
+        Request $request, 
+         int $adId,
+         AdsRepository $adsRepository,
+         TokenStorageInterface $tokenStorage,
+         EntityManagerInterface $em,
+         SimpleUploadService $simpleUploadService
+         ): Response
+    {
+        //Récup de l'annonce à modifier
+        $ad = $adsRepository->find($adId);
+        //Récup de l'utilisateur en cours
+        $user = $tokenStorage->getToken()->getUser();
+        $userId = $user instanceof User ? $user->getId() : null;
+        // Vérification que l'utilisateur est celui qui a posté
+        if ($ad->getUser()->getId() !== $userId) {
+            throw $this->createAccessDeniedException('Accès non autorisé');
+        }
+        //Récupèration de toutes les photos
+        $photos = $ad->getPhotos()->toArray();
+        
+       //Crée un formulaire d'annonce
+        $form = $this->createForm(AdsType::class, $ad);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $photos = $request->files->all();
+           
+            //Seulement s'il y a eu un changement dans les photos
+            if ($photos != []) {
+                $images = $photos['ads']['photos'];
+                foreach($images as $image){
+                    $new_photos = new Photos();
+                    $image_name = $image['name'];
+                    $new_photo = $simpleUploadService->uploadImage($image_name);
+                    $new_photos->setName($new_photo);
+                    $ad->addPhoto($new_photos);
+                }
+            }
+
+            $em->flush();
+            $em->persist($ad);
+            return $this->redirectToRoute('my_ads', ['userId' => $userId]);
+        }
+
+        return $this->render('ads/edit_ad.html.twig', [
+            'form' => $form->createView(),
+            'photos' => $photos
+        ]);
+    }
+    //Pour supprimer une photo (voir js deletephotos)
+    #[Route('/delete-photo/{photoId}', name: 'app_delete_photo', methods: ['DELETE'])]
+    public function deletePhoto(int $photoId, EntityManagerInterface $em)
+    {
+        $photo = $em->getRepository(Photos::class)->find($photoId);
+    
+        if (!$photo) {
+            throw $this->createNotFoundException('Photo non trouvée');
+        }
+    
+        $em->remove($photo);
+        $em->flush();
+    
+        return new JsonResponse(['message' => 'Photo supprimée avec succès'], 200);
+    }
+    #[Route('/my-ads/delete/{adId}', name: 'app_ad_delete', methods: ['DELETE'])]
+    public function deleteAd(
+        int $adId, 
+        AdsRepository $adsRepository,
+         EntityManagerInterface $em,
+         TokenStorageInterface $tokenStorage,
+         ): JsonResponse
+    {
+        $ad = $adsRepository->find($adId);
+        $user = $tokenStorage->getToken()->getUser();
+        $userId = $user instanceof User ? $user->getId() : null;
+        if (!$ad) {
+            return new JsonResponse(['message' => 'Annonce non trouvée'], 404);
+        }
+    
+        // Supprimer l'annonce
+        $em->remove($ad);
+        $em->flush();
+    
+        return new JsonResponse(['message' => 'Annonce supprimée avec succès'], 200);
+      
     }
 }

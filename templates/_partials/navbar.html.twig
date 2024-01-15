@@ -22,6 +22,7 @@
                 <a href="/register" class="btn btn-warning mx-3">Inscription</a>
                 {% if app.user %}
                 <a href="/logout" class="btn btn-danger">Deconnexion</a>
+                <a href="{{path('my_ads',{'userId': app.user.id})}}">Mes Annonces</a>
                 {% else %}
                 <a href="/login" class="btn btn-info mx-3">Login</a>
                 {% endif %}

@@ -30,7 +30,7 @@ class Ads
     private ?Cities $city = null;
      #[Groups(['exclude_city'])]
 
-    #[ORM\OneToMany(mappedBy: 'ad', targetEntity: Photos::class, cascade:['persist'])]
+    #[ORM\OneToMany(mappedBy: 'ad', targetEntity: Photos::class, cascade:['persist','remove'])]
     private Collection $photos;
 
      #[ORM\ManyToOne(inversedBy: 'ads')]

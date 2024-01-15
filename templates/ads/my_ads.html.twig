@@ -1,0 +1,36 @@
+{# templates/ads/all_ads.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes annonces{% endblock %}
+
+{% block body %}
+
+
+    {% if userAds is empty %}
+        <p>Aucune annonce pour le compte de {{ user.email }}</p>
+    {% else %}
+
+        {% for ad in userAds %}
+        
+            <h3>{{ ad.title }}</h3> 
+            <p>{{ ad.city.name }}</p>
+         
+            {% for photo in ad.photos %}
+          
+            <div class="img-container img-list">
+                <img src="{{ asset('img/' ~ photo.name)}}" alt="" class="img-ad img-list card-img-top mt-3">   
+            </div>
+            {% endfor %}
+                {% if ad.id is defined %}
+                    <a href="{{ path('app_ad_edit', {'adId': ad.id}) }}">Modifier l'annonce</a>
+                    <button type="button" class="btn btn-danger btn-delete-ad" data-ad-id="{{ ad.id }}">Supprimer l'annonce</button>
+                {% endif %}         
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    <script src= "{{asset('js/photos.js')}}"></script>
+    <script src= "{{asset('js/deleteAd.js')}}"></script>
+{% endblock %}

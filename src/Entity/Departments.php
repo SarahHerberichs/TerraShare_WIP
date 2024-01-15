@@ -20,6 +20,9 @@ class Departments
     #[ORM\Column(length: 20)]
     private ?string $number = null;
 
+    #[ORM\Column(length: 10)]
+    private ?string $zipcode = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -33,6 +36,17 @@ class Departments
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+    public function getZipcode(): ?string
+    {
+        return $this->zipcode;
+    }
+
+    public function setZipcode(string $zipcode): static
+    {
+        $this->name = $zipcode;
 
         return $this;
     }

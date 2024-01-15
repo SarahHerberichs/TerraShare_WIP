@@ -36,3 +36,4 @@ document.addEventListener("DOMContentLoaded", function () {
 // getElementsByClassName("btn-ajouter").addEventListener("click", function () {
 //   alert("salut");
 // });
+//Pour Réedition des photos :
