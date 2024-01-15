@@ -41,11 +41,50 @@
 }
 .by-id {
   margin: auto;
-
   text-align: center;
+}
+.login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  height: 30vh;
+  margin: auto;
+}
+.block-password,
+.block-email {
+  display: flex;
+  flex-direction: column;
+  height: 4em;
+  justify-content: space-around;
+  align-items: center;
+  margin: auto;
+}
+.block-password input,
+.block-email input {
+  height: 50%;
 }
 
 @media screen and (min-width: 768px) {
+  .login-form {
+    display: flex;
+    flex-direction: row;
+    width: 60vw;
+    height: 6em;
+    justify-content: center;
+    align-items: center;
+  }
+  .block-password,
+  .block-email {
+    justify-content: space-evenly;
+    width: 40%;
+    flex-direction: row;
+  }
+  .block-password input,
+  .block-email input {
+    width: 60%;
+  }
   .list-ads {
     display: flex;
     flex-wrap: wrap;
