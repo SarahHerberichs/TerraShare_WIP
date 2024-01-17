@@ -24,9 +24,10 @@
             <form class="d-flex">
                 
                 {% if app.user %}
-                 <a href="{{path('my_ads',{'userId': app.user.id})}}" class="btn btn-secondary mx-3">Mes Annonces</a>
+                <a href="{{path('my_ads',{'userId': app.user.id})}}" class="btn btn-secondary mx-3">Mes Annonces</a>
+                <a href="{{path('my_messages')}}" class="btn btn-secondary mx-3" >Mes Messages</a>
                 <a href="/logout" class="btn btn-danger">Deconnexion</a>
-               
+
                     {% if is_granted('ROLE_ADMIN') %}
                         <a href="/admin" class="btn btn-info mx-3">Dashboard</a>
                     {% endif %}

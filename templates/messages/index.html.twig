@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{sender.pseudo }} Envoyez un message à {{ receiver.email }} {% endblock %}
+
+{% block body %}
+{{sender.pseudo }} Envoyez un message à {{ receiver.email }}
+{{ form_start(form) }}
+    {{form_row(form._token)}}
+    {{ form_row(form.title) }}
+    {{ form_row(form.text) }}
+    
+    <button type="submit">Envoyer</button>
+{{ form_end(form)}}
+{% endblock %}

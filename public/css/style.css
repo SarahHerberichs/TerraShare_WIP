@@ -156,6 +156,9 @@
 .block-email input {
   height: 50%;
 }
+.send-message a {
+  text-decoration: none;
+}
 
 @media screen and (min-width: 992px) {
   .login-form {

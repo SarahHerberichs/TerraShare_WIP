@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h2>Messagerie</h2>
+    {% for message in messages %}
+        <h3> Objet : {{ message.title }} </h3>
+        <p>Message : {{ message.text }} </p>
+        <p>Envoyé le : {{ message.createdAt|date('d/m/Y à H:i') }}</p>
+
+        <p>Annonce : {{ message.ad.title }} </p>
+    {% endfor %}
+{% endblock %}

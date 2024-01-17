@@ -43,10 +43,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $pseudo = null;
 
+    #[ORM\OneToMany(mappedBy: 'User', targetEntity: Message::class)]
+    private Collection $sendedMessages;
+
+    #[ORM\OneToMany(mappedBy: 'User', targetEntity: Message::class)]
+    private Collection $receivedMessages;
+
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
         $this->ads = new ArrayCollection();
+        $this->sendedMessages = new ArrayCollection();
+        $this->receivedMessages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -169,6 +177,62 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPseudo(string $pseudo): static
     {
         $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getSendedMessages(): Collection
+    {
+        return $this->sendedMessages;
+    }
+
+    public function addSendedMessage(Message $sendedMessage): static
+    {
+        if (!$this->sendedMessages->contains($sendedMessage)) {
+            $this->sendedMessages->add($sendedMessage);
+            $sendedMessage->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSendedMessage(Message $sendedMessage): static
+    {
+        if ($this->sendedMessages->removeElement($sendedMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($sendedMessage->getSender() === $this) {
+                $sendedMessage->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+    public function getReceivedMessages(): Collection
+    {
+        return $this->receivedMessages ;
+    }
+
+    public function addReceivedMessage(Message $sendedMessage): static
+    {
+        if (!$this->receivedMessages ->contains($sendedMessage)) {
+            $this->receivedMessages ->add($sendedMessage);
+            $sendedMessage->setReceiver($this); 
+        }
+
+        return $this;
+    }
+
+    public function removeReceivedMessage(Message $sendedMessage): static
+    {
+        if ($this->receivedMessages ->removeElement($sendedMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($sendedMessage->getReceiver() === $this) {
+                $sendedMessage->setReceiver(null);
+            }
+        }
 
         return $this;
     }
