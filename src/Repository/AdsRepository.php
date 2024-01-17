@@ -29,12 +29,16 @@ class AdsRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    public function findByFilters($departmentNumber, $type, $status, $transaction)
+    public function findByFilters($departmentNumber, $type, $status, $transaction, $minPrice, $maxPrice)
     {
-        $queryBuilder = $this->createQueryBuilder('a')
+        $queryBuilder = $this->createQueryBuilder('a');
+        if($departmentNumber){
+            $queryBuilder
             ->join('a.city', 'c')
             ->andWhere('c.department_number = :departmentNumber')
             ->setParameter('departmentNumber', $departmentNumber);
+        }
+           
     
         if ($type) {
             $queryBuilder
@@ -53,6 +57,18 @@ class AdsRepository extends ServiceEntityRepository
             -> join ('a.Transaction', 'tr')
             ->andWhere('tr.id = :transaction')
             ->setParameter('transaction', $transaction);
+        }
+        
+        if ($minPrice) {
+            $queryBuilder
+                ->andWhere('a.price >= :minPrice')
+                ->setParameter('minPrice', $minPrice);
+        }
+
+        if ($maxPrice) {
+            $queryBuilder
+                ->andWhere('a.price <= :maxPrice')
+                ->setParameter('maxPrice', $maxPrice);
         }
     
         return $queryBuilder->getQuery()->getResult();

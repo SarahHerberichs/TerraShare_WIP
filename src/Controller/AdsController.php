@@ -151,11 +151,14 @@ class AdsController extends AbstractController
         $transactions =$transactionRepository->findAll();
         $selectedTransaction= $request->query->get('transaction',null);
 
-        if ($selectedDepartment) {
+        $selectedMinPrice = $request->query->get('minPrice', null);
+        $selectedMaxPrice = $request->query->get('maxPrice', null);
+
+        // if ($selectedDepartment) {
             // Appliquez le filtre par département
-            $ads = $adsRepository->findByFilters($selectedDepartment,$selectedType,$selectedStatus,$selectedTransaction);
+            $ads = $adsRepository->findByFilters($selectedDepartment,$selectedType,$selectedStatus,$selectedTransaction,$selectedMinPrice,$selectedMaxPrice);
             // Si aucun résultat n'est trouvé, redirigez vers la même page sans le paramètre de département
-        }
+        // } 
       
         return $this->render('ads/consult_ads.html.twig', [
             'ads' => $ads,
@@ -166,7 +169,9 @@ class AdsController extends AbstractController
             'transactions'=>$transactions,
             'selectedTransaction'=> $selectedTransaction,
             'status'=>$status,
-            'selectedStatus'=> $selectedStatus
+            'selectedStatus'=> $selectedStatus,
+            'selectedMinPrice' => $selectedMinPrice,
+            'selectedMaxPrice' => $selectedMaxPrice
         ]);
     }
 

@@ -9,14 +9,20 @@
 {% block body %}
     {# <h1>Annonce à {{ ad.city.name }}</h1> #}
    
-     <h3>{{ ad.title }} à {{ ad.city.name }}</h3> 
-    <p>{{ ad.text }}</p> 
+    <h3>{{ ad.title }} à {{ ad.city.name }}</h3> 
+     <p>{{ ad.text }}</p> 
+     {% if ad.price %} 
+     <p>Prix : {{ ad.price }} </p>
+     {% else %}
+     <p>Prix : Non Renseigné</p>
+     {% endif %}
    
 
   <div id="imageContainer" class="img-container by-id">
         {% for photo in photos %}
             <img src="{{ asset('img/' ~ photo.name)}}" alt="" class="img-ad card-img-top mt-3">   
         {% endfor %}
+
     </div>
    {{ ad.user.email }}
 

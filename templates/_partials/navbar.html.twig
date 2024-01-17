@@ -1,6 +1,9 @@
 <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">TerraShare</a>
+        <div class="title-and-logo">
+            <a class="navbar-brand" href="/">TerraShare</a>
+            <img src="{{ asset('/img/TerraShare_Logo_Vert.png') }}" class='main-logo' alt="logo">
+        </div>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02"
             aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -19,22 +22,19 @@
                 
             </ul>
             <form class="d-flex">
-                <a href="/register" class="btn btn-warning mx-3">Inscription</a>
+                
                 {% if app.user %}
+                 <a href="{{path('my_ads',{'userId': app.user.id})}}" class="btn btn-secondary mx-3">Mes Annonces</a>
                 <a href="/logout" class="btn btn-danger">Deconnexion</a>
-                <a href="{{path('my_ads',{'userId': app.user.id})}}">Mes Annonces</a>
+               
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="/admin" class="btn btn-info mx-3">Dashboard</a>
+                    {% endif %}
                 {% else %}
+                <a href="/register" class="btn btn-warning mx-3">Inscription</a>
                 <a href="/login" class="btn btn-info mx-3">Login</a>
                 {% endif %}
             </form>
-            {# <form class="d-flex">
-                <a href="{{path('app_register')}}" class="btn btn-warning mx-3">Inscription</a>
-                {% if app.user %}
-                <a href="{{path('app_logout')}}" class="btn btn-danger">Deconnexion</a>
-                {% else %}
-                <a href="{{path('app_login')}}" class="btn btn-info mx-3">Connexion</a>
-                {% endif %}
-            </form> #}
         </div>
     </div>
 </nav>

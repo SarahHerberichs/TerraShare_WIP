@@ -55,8 +55,8 @@ class AdsType extends AbstractType
             ->add('status', EntityType::class, [
                 'class' => Status::class,
                 'choice_label' => 'name',
-            ]);
-           
+            ])
+            ->add('price',TextType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Photos;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AdsRepository;
 use Doctrine\Common\Collections\Collection;
@@ -44,6 +45,12 @@ class Ads
 
      #[ORM\ManyToOne(inversedBy: 'ads')]
      private ?Status $Status = null;
+
+     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+     private ?string $price = null;
+
+     #[ORM\Column(length: 255, nullable: true)]
+     private ?string $price_unit = null;
 
    
     public function __construct()
@@ -180,6 +187,30 @@ class Ads
     public function setStatus(?Status $Status): static
     {
         $this->Status = $Status;
+
+        return $this;
+    }
+
+    public function getPrice(): ?string
+    {
+        return $this->price;
+    }
+
+    public function setPrice(?string $price): static
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getPriceUnit(): ?string
+    {
+        return $this->price_unit;
+    }
+
+    public function setPriceUnit(?string $price_unit): static
+    {
+        $this->price_unit = $price_unit;
 
         return $this;
     }

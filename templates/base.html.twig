@@ -24,9 +24,6 @@
 
 <body>
 
-<img src="{{ asset('build/images/logo.png') }}" alt="ACME logo">
-
-
 {% include "_partials/navbar.html.twig" %}  
 
 {% if app.user and app.user.isVerified ==false %}
@@ -38,7 +35,7 @@
 </div>
 {% else %}
     {% if app.user and app.user.isVerified ==true %}
-    <p>Connecté</p>
+    <p>{{ app.user.pseudo }} : Connecté</p>
     {% endif %}
 {% endif %}
 

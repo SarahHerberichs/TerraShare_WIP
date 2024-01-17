@@ -55,7 +55,17 @@
             {% endfor %}
             </select>
         </div>
-        <button type="submit">Filtrer</button>
+        <div class="form-element block-price">
+            <label for="minPrice">Prix minimum :</label>
+            <input type="number" name="minPrice" id="minPrice" min="0" placeholder="Min" value="{{ selectedMinPrice }}">
+        </div>
+
+        <div class="form-element block-price">
+            <label for="maxPrice">Prix maximum :</label>
+            <input type="number" name="maxPrice" id="maxPrice" min="0" placeholder="Max" value="{{ selectedMaxPrice }}">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Filtrer</button>
 
     </form>
 
@@ -79,6 +89,10 @@
 
                         {% if ad.transaction is not null %}
                             <p> Transaction : {{ ad.transaction.name }}</p>
+                        {% endif %}
+
+                        {% if ad.price is not null %}
+                            <p>Prix : {{ ad.price }} €</p>
                         {% endif %}
                     </div>
 
