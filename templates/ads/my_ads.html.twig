@@ -12,7 +12,7 @@
     {% else %}
 
         {% for ad in userAds %}
-        
+        <div class="each-user-ad">
             <h3>{{ ad.title }}</h3> 
             <p>{{ ad.city.name }}</p>
          
@@ -22,10 +22,13 @@
                 <img src="{{ asset('img/' ~ photo.name)}}" alt="" class="img-ad img-list card-img-top mt-3">   
             </div>
             {% endfor %}
-                {% if ad.id is defined %}
-                    <a href="{{ path('app_ad_edit', {'adId': ad.id}) }}">Modifier l'annonce</a>
-                    <button type="button" class="btn btn-danger btn-delete-ad" data-ad-id="{{ ad.id }}">Supprimer l'annonce</button>
-                {% endif %}         
+            {% if ad.id is defined %}
+            <div class="buttons-dl-up">
+                <button class ="btn btn-success"><a href="{{ path('app_ad_edit', {'adId': ad.id}) }}"> </a>Modifier l'annonce</button >
+                <button type="button" class="btn btn-danger btn-delete-ad" data-ad-id="{{ ad.id }}">Supprimer l'annonce</button>
+            </div>
+            {% endif %}    
+        </div>     
         {% endfor %}
     {% endif %}
 {% endblock %}

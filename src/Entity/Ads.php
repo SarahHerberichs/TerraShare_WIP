@@ -36,6 +36,15 @@ class Ads
      #[ORM\ManyToOne(inversedBy: 'ads')]
      private ?User $user = null;
 
+     #[ORM\ManyToOne(inversedBy: 'ads')]
+     private ?Type $Type = null;
+
+     #[ORM\ManyToOne(inversedBy: 'ads')]
+     private ?Transaction $Transaction = null;
+
+     #[ORM\ManyToOne(inversedBy: 'ads')]
+     private ?Status $Status = null;
+
    
     public function __construct()
     {
@@ -135,6 +144,42 @@ class Ads
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getType(): ?Type
+    {
+        return $this->Type;
+    }
+
+    public function setType(?Type $Type): static
+    {
+        $this->Type = $Type;
+
+        return $this;
+    }
+
+    public function getTransaction(): ?Transaction
+    {
+        return $this->Transaction;
+    }
+
+    public function setTransaction(?Transaction $Transaction): static
+    {
+        $this->Transaction = $Transaction;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->Status;
+    }
+
+    public function setStatus(?Status $Status): static
+    {
+        $this->Status = $Status;
 
         return $this;
     }

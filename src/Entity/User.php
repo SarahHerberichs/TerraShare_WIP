@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['pseudo'], message: 'Ce pseudo est déjà utilisé.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -38,6 +39,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Ads::class)]
     private Collection $ads;
+
+    #[ORM\Column(length: 255)]
+    private ?string $pseudo = null;
 
     public function __construct()
     {
@@ -153,6 +157,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $ad->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(string $pseudo): static
+    {
+        $this->pseudo = $pseudo;
 
         return $this;
     }

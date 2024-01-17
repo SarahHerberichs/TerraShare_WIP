@@ -29,6 +29,35 @@ class AdsRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findByFilters($departmentNumber, $type, $status, $transaction)
+    {
+        $queryBuilder = $this->createQueryBuilder('a')
+            ->join('a.city', 'c')
+            ->andWhere('c.department_number = :departmentNumber')
+            ->setParameter('departmentNumber', $departmentNumber);
+    
+        if ($type) {
+            $queryBuilder
+                ->join('a.Type', 't')
+                ->andWhere('t.id = :type')
+                ->setParameter('type', $type);
+        }
+        if ($status) {
+            $queryBuilder
+            ->join ('a.Status', 's')
+            ->andWhere ('s.id = :status')
+            ->setParameter('status', $status);
+        }
+        if ($transaction) {
+            $queryBuilder
+            -> join ('a.Transaction', 'tr')
+            ->andWhere('tr.id = :transaction')
+            ->setParameter('transaction', $transaction);
+        }
+    
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
     public function findByUserId(int $userId): array
     {
         return $this->createQueryBuilder('a')

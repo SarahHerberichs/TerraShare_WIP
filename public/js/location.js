@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
             cityContainer.className = "city-item";
 
             var cityName = document.createElement("span");
+
             cityName.textContent = city.name + "-" + city.zipcode;
 
             cityContainer.appendChild(cityName);

@@ -23,7 +23,7 @@ class Cities
 
     #[ORM\Column]
     #[Groups(['exclude_ads'])]
-    private ?int $zipcode = null;
+    private ?string $zipcode = null;
 
     #[ORM\Column(length: 10)]
     #[Groups(['exclude_ads'])]
@@ -55,12 +55,12 @@ class Cities
         return $this;
     }
 
-    public function getZipcode(): ?int
+    public function getZipcode(): ?string
     {
         return $this->zipcode;
     }
 
-    public function setZipcode(int $zipcode): static
+    public function setZipcode(string $zipcode): static
     {
         $this->zipcode = $zipcode;
 

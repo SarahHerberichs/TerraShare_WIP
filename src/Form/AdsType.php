@@ -5,8 +5,11 @@ namespace App\Form;
 
 
 use App\Entity\Ads;
+use App\Entity\Type;
 use App\Entity\Cities;
+use App\Entity\Status;
 use App\Form\PhotosType;
+use App\Entity\Transaction;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -40,8 +43,19 @@ class AdsType extends AbstractType
                 'allow_delete'=>true,
                 'by_reference'=>false,
                 'mapped'=>false
+            ])
+            ->add('type', EntityType::class, [
+                'class' => Type::class,
+                'choice_label' => 'name',
+            ])
+            ->add('transaction', EntityType::class, [
+                'class' => Transaction::class,
+                'choice_label' => 'name',
+            ])
+            ->add('status', EntityType::class, [
+                'class' => Status::class,
+                'choice_label' => 'name',
             ]);
-           
            
     }
 

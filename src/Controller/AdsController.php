@@ -17,6 +17,9 @@ use App\Repository\PhotosRepository;
 use App\Services\SimpleUploadService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\DepartmentsRepository;
+use App\Repository\StatusRepository;
+use App\Repository\TransactionRepository;
+use App\Repository\TypeRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -82,7 +85,7 @@ class AdsController extends AbstractController
         if (!$city) {
             throw $this->createNotFoundException('City not found');
         }
-
+        $errorMessage = '';
         $ad = new Ads();
         $ad->setCity($city);
         $ad->setUser($user);
@@ -92,29 +95,34 @@ class AdsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $photos = $request->files->all();
-            $images = $photos['ads']['photos'];
             
-            foreach($images as $image){
-                $new_photos = new Photos();
-                $image_name = $image['name'];
-                $new_photo = $simpleUploadService->uploadImage($image_name);
-                $new_photos->setName($new_photo);
-                $ad->addPhoto($new_photos);
-
+            if (!empty($photos)){
+                $images = $photos['ads']['photos'];
+                foreach($images as $image){
+                    $new_photos = new Photos();
+                    $image_name = $image['name'];
+                    $new_photo = $simpleUploadService->uploadImage($image_name);
+                    $new_photos->setName($new_photo);
+                    $ad->addPhoto($new_photos);
+                     
+                    $ad->setCity($form->get('city')->getData());
+                    
+                    $em->persist($ad);
+                    $em->flush();
+                    // Redirigez vers une page de confirmation ou ailleurs
+                    return $this->redirectToRoute('app_home');
+                }
+            } else{
+                $errorMessage = 'Postez au moins une photo SVP';
             }
-            $ad->setCity($form->get('city')->getData());
-            $em->persist($ad);
-           
-            $em->flush();
 
-            // Redirigez vers une page de confirmation ou ailleurs
-            return $this->redirectToRoute('app_home');
         }
 
         // Affichez le formulaire dans le template
         return $this->render('ads/create_ad.html.twig', [
             'form' => $form->createView(),
             'city' => $city,
+            'errorMessage' => $errorMessage
         ]);
     }
     //voir Annonces
@@ -122,26 +130,43 @@ class AdsController extends AbstractController
     public function consultAds(
         Request $request,
         AdsRepository $adsRepository,
-         DepartmentsRepository $departmentsRepository,
-         PhotosRepository $photosRepository): Response
+        DepartmentsRepository $departmentsRepository,
+        PhotosRepository $photosRepository,
+        TypeRepository $typeRepository,
+        TransactionRepository $transactionRepository,
+        StatusRepository $statusRepository): Response
     {
 
         $ads = $adsRepository->findAll();
       
         $departments = $departmentsRepository->findBy([], ['number' => 'ASC']);    
         $selectedDepartment = $request->query->get('department', null);
-    
+
+        $types = $typeRepository->findAll();
+        $selectedType = $request->query->get('type',null);
+         
+        $status = $statusRepository->findAll();
+        $selectedStatus = $request->query->get('status',null);
+
+        $transactions =$transactionRepository->findAll();
+        $selectedTransaction= $request->query->get('transaction',null);
+
         if ($selectedDepartment) {
             // Appliquez le filtre par département
-            $ads = $adsRepository->findByDepartment($selectedDepartment);
-           
+            $ads = $adsRepository->findByFilters($selectedDepartment,$selectedType,$selectedStatus,$selectedTransaction);
             // Si aucun résultat n'est trouvé, redirigez vers la même page sans le paramètre de département
-        
         }
+      
         return $this->render('ads/consult_ads.html.twig', [
             'ads' => $ads,
             'departments' => $departments,
             'selectedDepartment' => $selectedDepartment,
+            'types'=>$types,
+            'selectedType'=> $selectedType,
+            'transactions'=>$transactions,
+            'selectedTransaction'=> $selectedTransaction,
+            'status'=>$status,
+            'selectedStatus'=> $selectedStatus
         ]);
     }
 

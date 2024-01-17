@@ -8,12 +8,16 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Créer une Annonce pour {{ city.name }}et son id est {{city.id}}</h1>
+    <h1>Créer une Annonce à :{{ city.name }}</h1>
 
     {{ form_start(form) }}
         {{form_row(form._token)}}
         {{ form_row(form.title) }}
         {{ form_row(form.text) }}
+        {{ form_row (form.type) }}
+        {{ form_row (form.transaction) }}
+        {{ form_row (form.status) }}
+        <p>Poster au moins une photo</p>
         <button type = "button" class="btn btn-success btn-ajouter" data-collection="#photos">Ajouter une image</button>
        <div id="photos"
         data-index= "{{form.photos|length > 0 ? form.photos|last.vars.name + 1 : 0}}"
@@ -21,13 +25,14 @@
         >
         
         </div>
+        <p class='error'> {{ errorMessage }} <p>
         {# Ajoutez le bouton de soumission ici #}
         <button type="submit">Créer l'annonce</button>
 
     {{ form_end(form) }}
 
-{% block javascripts %}
-    <script src= "{{asset('js/photos.js')}}"></script>
-{% endblock %}
+    {% block javascripts %}
+        <script src= "{{asset('js/photos.js')}}"></script>
+    {% endblock %}
 
 {% endblock %}

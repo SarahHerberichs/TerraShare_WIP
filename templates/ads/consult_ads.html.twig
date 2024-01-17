@@ -1,5 +1,3 @@
-{# templates/ads/all_ads.html.twig #}
-
 {% extends 'base.html.twig' %}
 
 {% block title %}Toutes les annonces{% endblock %}
@@ -7,18 +5,58 @@
 {% block body %}
     <h1>Toutes les annonces</h1>
 
-    {# Filtre par département #}
-    <form method="get">
-        <label for="department">Filtrer par département :</label>
-        <select name="department" id="department">
-            <option value="">Tous les départements</option>
-            {% for department in departments %}
-                <option value="{{ department.number }}" {% if department.number == selectedDepartment %}selected{% endif %}>
-                    {{ department.number }} - {{ department.name }}
+   
+    <form method="get" class="form-filter-ads">
+     {# Filtre par département #}
+        <div class="form-element block-department">
+            <label for="department">Filtrer par département :</label>
+            <select name="department" id="department">
+                <option value="">Tous les départements</option>
+                {% for department in departments %}
+                    <option value="{{ department.number }}" {% if department.number == selectedDepartment %}selected{% endif %}>
+                        {{ department.number }} - {{ department.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-element block-type">
+            {# Filtre par type :Materiel/Terrain/Personne #}
+            <label for="type">Filtrer par type :</label>
+            <select name="type" id="type">
+            <option value="">Tous les types</option>
+            {% for type in types %}
+                <option value="{{ type.id }}" {% if type.id == selectedType %}selected{% endif %}>
+                    {{ type.name }}
                 </option>
             {% endfor %}
-        </select>
+            </select>
+        </div>
+        <div class="form-element block-transaction">
+            {#Filtre par transaction :vente/loc/service #}
+            <label for="transaction">Filtrer par transaction :</label>
+            <select name="transaction" id="transaction">
+            <option value="">Toutes les transactions</option>
+            {% for transaction in transactions %}
+                <option value="{{ transaction.id }}" {% if transaction.id == selectedTransaction %}selected{% endif %}>
+                    {{ transaction.name }}
+                </option>
+            {% endfor %}
+            </select>
+        </div>
+        <div class="form-element block-status">
+            {#Filtre par Status : Disponnible / Proposition #}
+            <label for="status">Filtrer par recherche :</label>
+            <select name="status" id="status">
+            <option value="">Proposition/Recherche</option>
+            {% for stat in status %}
+                <option value="{{ stat.id }}" {% if stat.id == selectedStatus %}selected{% endif %}>
+                    {{ stat.name }}
+                </option>
+            {% endfor %}
+            </select>
+        </div>
         <button type="submit">Filtrer</button>
+
     </form>
 
     {% if ads is empty %}
@@ -26,21 +64,35 @@
     {% else %}
         <ul class= "list-ads">
            {% for ad in ads %}
-                <li class="each-ad">
-                <div class="text-content">
-                    <h3>{{ ad.title }}</h3> 
-                    <p>{{ ad.city.name }}</p>
-                </div>
-                   {% for photo in ad.photos %}
-                    {% if loop.first %}
-                     <a href="{{ path('app_consult_ad_by_id', {'id': ad.id}) }}">
-                        <div class="img-container img-list">
-                            <img src="{{ asset('img/' ~ photo.name)}}" alt="" class="img-ad img-list card-img-top mt-3">   
-                        </div>
-                    </a>
+                {# <li class="each-ad"> #}
+                <a href="{{ path('app_consult_ad_by_id', {'id': ad.id}) }}" class="each-ad">
+                    <div class="text-content">
+
+                        <h3>{{ ad.title }}</h3> 
+                        <p class='city-name'> à {{ ad.city.name }}</p>
+                        {% if ad.type is not null %}
+                            <p> Type : {{ ad.type.name }} </p>
                         {% endif %}
+                        {% if ad.status is not null %}
+                            <p> Status : {{ ad.status.name }} </p>
+                        {% endif %}
+
+                        {% if ad.transaction is not null %}
+                            <p> Transaction : {{ ad.transaction.name }}</p>
+                        {% endif %}
+                    </div>
+
+                    {% for photo in ad.photos %}
+                    {% if loop.first %}
+                    
+                        <div class="img-container img-list">
+                            <img src="{{ asset('img/' ~ photo.name)}}" alt="" class="main-img-ad img-list card-img-top mt-3">   
+                        </div>
+                    
+                    {% endif %}
                    {% endfor %}
-                </li>
+                </a>
+                {# </li> #}
             {% endfor %}
         </ul>
     {% endif %}

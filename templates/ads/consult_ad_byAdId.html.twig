@@ -9,9 +9,9 @@
 {% block body %}
     {# <h1>Annonce à {{ ad.city.name }}</h1> #}
    
-     <h3>{{ ad.title }}</h3> 
+     <h3>{{ ad.title }} à {{ ad.city.name }}</h3> 
     <p>{{ ad.text }}</p> 
-    <p>{{ ad.city.name }}</p>
+   
 
   <div id="imageContainer" class="img-container by-id">
         {% for photo in photos %}
