@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function deletePhoto(photoId) {
-    // Envoyer une requête AJAX au serveur pour supprimer la photo
     var xhr = new XMLHttpRequest();
     xhr.open("DELETE", "/delete-photo/" + photoId, true);
     xhr.setRequestHeader("Content-Type", "application/json");

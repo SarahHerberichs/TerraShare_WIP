@@ -186,7 +186,7 @@ class AdsController extends AbstractController
 
         $photos= $photosRepository->findByAdId($id);
      
-        return $this->render('ads/consult_ad_byAdId.html.twig', [
+        return $this->render('ads/consult_ad_byId.html.twig', [
             'ad' => $ad,
             'photos'=> $photos
         ]);

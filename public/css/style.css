@@ -2,6 +2,35 @@
   color: red;
   font-weight: bold;
 }
+h1 {
+  margin-bottom: 1em;
+}
+/* Style de base pour l'effet de soulignement */
+h1 {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  color: #000; /* Couleur du texte */
+}
+
+/* Ajout d'un pseudo-élément pour créer l'effet de soulignement */
+h1:before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px; /* Hauteur du soulignement */
+  bottom: 0;
+  left: 0;
+  background-color: #000; /* Couleur du soulignement */
+  animation: underline 0.5s ease forwards; /* Utilisation de l'animation avec keyframes */
+}
+
+/* Définition des keyframes pour l'animation */
+@keyframes underline {
+  to {
+    width: 100%;
+  }
+}
 .main-logo {
   height: 3em;
   width: 3em;
@@ -88,6 +117,7 @@
 .img-ad {
   width: 10em;
   height: 10em;
+  cursor: pointer;
 }
 .img-container {
   grid-row: span 1;
@@ -159,7 +189,44 @@
 .send-message a {
   text-decoration: none;
 }
+#popup {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+}
+#popupImageContainer {
+  text-align: center;
+}
 
+.popup-image {
+  max-width: 50%;
+  max-height: 50%;
+  margin: auto;
+}
+
+.arrow {
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#prevArrow {
+  left: 70px;
+}
+
+#nextArrow {
+  right: 70px;
+}
 @media screen and (min-width: 992px) {
   .login-form {
     display: flex;

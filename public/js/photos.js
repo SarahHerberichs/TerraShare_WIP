@@ -33,7 +33,3 @@ document.addEventListener("DOMContentLoaded", function () {
     .querySelectorAll(".btn-ajouter")
     .forEach((btn) => btn.addEventListener("click", addFormToCollection));
 });
-// getElementsByClassName("btn-ajouter").addEventListener("click", function () {
-//   alert("salut");
-// });
-//Pour Réedition des photos :

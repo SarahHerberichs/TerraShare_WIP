@@ -1,11 +1,8 @@
-{# templates/ads/all_ads.html.twig #}
-
 {% extends 'base.html.twig' %}
 
 {% block title %}Mes annonces{% endblock %}
 
 {% block body %}
-
 
     {% if userAds is empty %}
         <p>Aucune annonce pour le compte de {{ user.email }}</p>

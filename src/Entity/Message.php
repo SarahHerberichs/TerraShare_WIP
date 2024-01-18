@@ -32,6 +32,9 @@ class Message
     #[ORM\ManyToOne(inversedBy: 'messages')]
     private ?Ads $Ad = null;
 
+    #[ORM\Column]
+    private ?bool $isRead = null;
+
     public function __construct() {
         $this->created_at = new \DateTimeImmutable();
     }
@@ -109,6 +112,18 @@ class Message
     public function setAd(?Ads $Ad): static
     {
         $this->Ad = $Ad;
+
+        return $this;
+    }
+
+    public function isIsRead(): ?bool
+    {
+        return $this->isRead;
+    }
+
+    public function setIsRead(bool $isRead): static
+    {
+        $this->isRead = $isRead;
 
         return $this;
     }

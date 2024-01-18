@@ -20,7 +20,15 @@ class MessageRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Message::class);
     }
-
+    public function findSenderByMessageId($messageId)
+    {
+        return $this->createQueryBuilder('m')
+            ->select('m.sender')
+            ->andWhere('m.id = :messageId')
+            ->setParameter('messageId', $messageId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 //    /**
 //     * @return Message[] Returns an array of Message objects
 //     */

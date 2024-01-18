@@ -1,14 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block javascripts %}
-    <script src= "{{asset('js/adByAdId.js')}}"></script>
-{% endblock %}
-
 {% block title %}Toutes les annonces{% endblock %}
 
 {% block body %}
-    {# <h1>Annonce à {{ ad.city.name }}</h1> #}
-   
+    
     <h3>{{ ad.title }} à {{ ad.city.name }}</h3> 
      <p>{{ ad.text }}</p> 
      {% if ad.price %} 
@@ -16,15 +11,22 @@
      {% else %}
      <p>Prix : Non Renseigné</p>
      {% endif %}
-   
-
+    
     <div id="imageContainer" class="img-container by-id">
         {% for photo in photos %}
             <img src="{{ asset('img/' ~ photo.name)}}" alt="" class="img-ad card-img-top mt-3">   
         {% endfor %}
-
     </div>
-    <button class='send-message'><a href="{{ path('app_sendMessage', {'adId': ad.id}) }}"> Contactez l'annonceur<a/></button>
-     
+    <div id="popup">
+        <div id="prevArrow" class="arrow" onclick='prevImage()'>&lt;</div>
+        <div id="popupImageContainer"></div>
+        <div id="nextArrow" class="arrow" onclick='nextImage()'>&gt;</div>
+    </div>
 
+    <button class='send-message btn btn-secondary '><a href="{{ path('app_sendMessage', {'adId': ad.id }) }}"> Contactez l'annonceur<a/></button>
+     
+{% endblock %}
+
+{% block javascripts %}
+    <script src= "{{asset('js/adById.js')}}"></script>
 {% endblock %}

@@ -1,12 +1,24 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<h2>Messagerie</h2>
+<h1>Messagerie</h1>
     {% for message in messages %}
-        <h3> Objet : {{ message.title }} </h3>
-        <p>Message : {{ message.text }} </p>
-        <p>Envoyé le : {{ message.createdAt|date('d/m/Y à H:i') }}</p>
-
-        <p>Annonce : {{ message.ad.title }} </p>
+        <div class="message-id-{{ message.id }}">
+            <p>Message de {{ message.sender.pseudo }} pour l'annonce : <b>{{ message.ad.title }}</b></p>
+            <p>Objet : {{ message.title }}</p>
+            <p>Message : {{ message.text }}</p>
+            <p>Envoyé le : {{ message.createdAt|date('d/m/Y à H:i') }}</p>
+            <p class='message-not-read' {% if message.isRead %} style="display: none;" {% endif %}>
+            Message Non Lu <i class="far fa-envelope" style="color: red;"></i>
+            </p>
+            <p class='message-read' {% if not message.isRead %} style="display: none;" {% endif %}>Message lu <i class="fas fa-check-circle" style="color: green;"></i></p>
+            {% if not message.isRead %}<button class="mark-as-read" data-message-id="{{ message.id }}">Marquer comme lu</button> {% endif %}
+            <button class='send-message btn btn-info'><a href="{{ path('app_sendMessage', {'adId': message.ad.id, 'messageId': message.id}) }}">Répondre</a></button>
+        </div>
     {% endfor %}
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/markAsRead.js') }}"></script>
+    <script src="https://kit.fontawesome.com/f924bf4e1d.js" crossorigin="anonymous"></script>
 {% endblock %}

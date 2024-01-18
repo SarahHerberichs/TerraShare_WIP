@@ -15,8 +15,8 @@ class MessageType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('text')
-            ->add('created_at');
+            ->add('text');
+           
     }
 
     public function configureOptions(OptionsResolver $resolver): void
