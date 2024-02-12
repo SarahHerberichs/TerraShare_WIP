@@ -2,18 +2,20 @@
   color: red;
   font-weight: bold;
 }
+a {
+  text-decoration: none;
+}
 h1 {
   margin-bottom: 1em;
-}
-/* Style de base pour l'effet de soulignement */
-h1 {
   position: relative;
   display: inline-block;
   text-decoration: none;
   color: #000; /* Couleur du texte */
 }
-
-/* Ajout d'un pseudo-élément pour créer l'effet de soulignement */
+.invisible {
+  display: none;
+}
+/*Ajout d'un pseudo-élément pour créer l'effet de soulignement */
 h1:before {
   content: "";
   position: absolute;
@@ -43,8 +45,37 @@ h1:before {
   text-align: center;
   margin-right: 7em;
 }
+.navbar-btn-message span {
+  background-color: blue;
+  color: wheat;
+  padding: 1em;
+  border-radius: 1em;
+}
+.my-messages-btn {
+  background-color: rgb(223, 180, 99);
+}
+.nav-btns {
+  display: flex;
+  flex-direction: column;
+}
+.nav-btns a {
+  margin-top: 1em !important;
+  width: 50%;
+}
 .title-and-logo a {
   margin-right: 0 !important;
+}
+.post-ad-main {
+  text-align: center;
+  margin: auto;
+}
+.department-choice,
+.city-choice {
+  display: flex;
+  width: 80vw;
+  flex-direction: column;
+  align-content: center;
+  margin: auto;
 }
 .list-ads {
   width: 80vw;
@@ -113,6 +144,9 @@ h1:before {
 }
 .text-content p {
   overflow: hidden;
+}
+.price-input {
+  width: 20%;
 }
 .img-ad {
   width: 10em;
@@ -186,8 +220,26 @@ h1:before {
 .block-email input {
   height: 50%;
 }
-.send-message a {
+.btn-send-message a {
   text-decoration: none;
+}
+.each-message-conv {
+  border: 1px solid black;
+}
+.btn-reduce-text {
+  width: 100%;
+}
+
+.received-message {
+  background-color: #f0f0f0;
+}
+.sent-message {
+  background-color: #add8e6;
+  border: 1px solid #add8e6;
+}
+.btn-send-message {
+  display: block;
+  margin: auto;
 }
 #popup {
   display: flex;
@@ -228,6 +280,20 @@ h1:before {
   right: 70px;
 }
 @media screen and (min-width: 992px) {
+  .nav-btns {
+    flex-direction: row;
+  }
+  .nav-btns a {
+    margin-top: auto;
+    width: auto;
+  }
+  .department-choice,
+  .city-choice {
+    display: flex;
+    width: 50vw;
+    flex-direction: column;
+    justify-content: space-between;
+  }
   .login-form {
     display: flex;
     flex-direction: row;

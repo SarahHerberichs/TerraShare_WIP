@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Welcome!{% endblock %}</title>
+    <title>{% block title %}Welcome to TerraShare!{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
@@ -26,22 +26,22 @@
 {% include "_partials/navbar.html.twig" %}  
 
 {% if app.user and app.user.isVerified ==false %}
-<div class="alert alert-danger alert-dissmissible fade show w-50 mx-auto mt-3" role="alert">
-    <strong>ATTENTION</strong>  
-    <p>Votre compte n'a pas été activé ! </p>
-    <p>Merci de valider votre compte via le lien envoyé sur votre boite mail lors de l'inscription</p>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-{% else %}
-    {% if app.user and app.user.isVerified ==true %}
-    <p>{{ app.user.pseudo }} : Connecté</p>
+    <div class="alert alert-danger alert-dissmissible fade show w-50 mx-auto mt-3" role="alert">
+        <strong>ATTENTION</strong>  
+        <p>Votre compte n'a pas été activé ! </p>
+        <p>Merci de valider votre compte via le lien envoyé sur votre boite mail lors de l'inscription</p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% else %}
+        {% if app.user and app.user.isVerified ==true %}
+        <p>{{ app.user.pseudo }} : Connecté</p>
+        {% endif %}
     {% endif %}
-{% endif %}
 
-  {% include "_partials/alerts.html.twig" %}
-  <div class="container">
-      {% block body %}{% endblock %}
-  </div>
+    {% include "_partials/alerts.html.twig" %}
+    <div class="container">
+        {% block body %}{% endblock %}
+    </div>
 
 </body>
 

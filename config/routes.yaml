@@ -11,3 +11,7 @@ get_department:
 get_cities:
   path: "/get-cities/{departmentNumber}"
   controller: App\Controller\AdsController::getCities
+app_ad_delete:
+  path: /my-ads/delete/{adId}
+  controller: App\Controller\AdsController::deleteAd
+  methods: [DELETE]

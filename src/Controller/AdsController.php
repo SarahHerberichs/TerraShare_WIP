@@ -38,9 +38,11 @@ class AdsController extends AbstractController
     public function index(DepartmentsRepository $departmentsRepository): Response
     {
         $departments= $departmentsRepository->findBy([], ['number' => 'ASC']);
-    
+        $userLoggedIn = $this->getUser() !== null;
+
         return $this->render('ads/location.html.twig', [
-            'departments' => $departments
+            'departments' => $departments,
+            'userLoggedIn' => $userLoggedIn,
         ]);
     }
     //Récupération des données transmises par le code location.js qui transmets des données à l'url get-cities...
@@ -78,8 +80,9 @@ class AdsController extends AbstractController
           TokenStorageInterface $tokenStorage,
           SimpleUploadService $simpleUploadService): Response
     {
+        
         $user = $tokenStorage->getToken()->getUser();
-     
+        
         $city = $citiesRepository->find($cityId);
        
         if (!$city) {
@@ -221,6 +224,7 @@ class AdsController extends AbstractController
     {
         //Récup de l'annonce à modifier
         $ad = $adsRepository->find($adId);
+
         //Récup de l'utilisateur en cours
         $user = $tokenStorage->getToken()->getUser();
         $userId = $user instanceof User ? $user->getId() : null;
@@ -287,6 +291,7 @@ class AdsController extends AbstractController
         $ad = $adsRepository->find($adId);
         $user = $tokenStorage->getToken()->getUser();
         $userId = $user instanceof User ? $user->getId() : null;
+        
         if (!$ad) {
             return new JsonResponse(['message' => 'Annonce non trouvée'], 404);
         }

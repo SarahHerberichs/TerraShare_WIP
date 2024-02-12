@@ -15,18 +15,33 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Ads</h1>
+   
+        <h1>Postez votre annonce</h1>
+        <div class="post-ad-main">
+            <div class="department-choice">
+                <label for="departments">Choose a department:</label>
+                <select id="departments" name="departments">
+                    {% for department in departments %}
+                        <option value="{{ department.number }}">{{ department.number }} - {{ department.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-    <label for="departments">Choose a department:</label>
-    <select id="departments" name="departments">
-        {% for department in departments %}
-            <option value="{{ department.number }}">{{ department.number }} - {{ department.name }}</option>
-        {% endfor %}
-    </select>
-    <p id= "selectedDepartment"></p>
+            <p id= "selectedDepartment"></p>
+            <div class="city-choice">
+                <label for="citySearch">Search for a city:</label>
+                <input type="text" id="citySearch" name="citySearch">
+            </div>
 
-    <label for="citySearch">Search for a city:</label>
-    <input type="text" id="citySearch" name="citySearch">
+            
+            <div id="userLoggedIn" data-logged-in="{{ userLoggedIn ? 'true' : 'false' }}"></div>
+               {# Div pour afficher le message d'erreur, cachée par défaut #}
+            <div id="errorMessage" class="alert alert-danger" style="display: none;">
+                Veuillez vous connecter pour accéder à cette fonctionnalité.
+            </div>
 
-    <div id="citiesList"></div>
+        <div id="citiesList"></div>
+        </div>
+    </div>
+
 {% endblock %}

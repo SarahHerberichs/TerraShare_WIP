@@ -11,7 +11,7 @@
         {% for ad in userAds %}
         <div class="each-user-ad">
             <h3>{{ ad.title }}</h3> 
-            <p>{{ ad.city.name }}</p>
+            <p>à : {{ ad.city.name }}</p>
          
             {% for photo in ad.photos %}
           
@@ -21,7 +21,7 @@
             {% endfor %}
             {% if ad.id is defined %}
             <div class="buttons-dl-up">
-                <button class ="btn btn-success"><a href="{{ path('app_ad_edit', {'adId': ad.id}) }}"> </a>Modifier l'annonce</button >
+            <button class="btn btn-success"><a href="{{ path('app_ad_edit', {'adId': ad.id}) }}">Modifier l'annonce</a></button>
                 <button type="button" class="btn btn-danger btn-delete-ad" data-ad-id="{{ ad.id }}">Supprimer l'annonce</button>
             </div>
             {% endif %}    

@@ -79,7 +79,7 @@
                     <div class="text-content">
 
                         <h3>{{ ad.title }}</h3> 
-                        <p class='city-name'> à {{ ad.city.name }}</p>
+                        <p class='city-name'> à {{ ad.city.name|capitalize }}</p>
                         {% if ad.type is not null %}
                             <p> Type : {{ ad.type.name }} </p>
                         {% endif %}

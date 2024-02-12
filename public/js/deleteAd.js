@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
     xhr.setRequestHeader("Content-Type", "application/json");
     //quand la requete est treminée
     xhr.onload = function () {
+      console.log(xhr.status);
       //Vérifie le statut de la réponse
       if (xhr.status === 200) {
         // Pour analyser la réponse

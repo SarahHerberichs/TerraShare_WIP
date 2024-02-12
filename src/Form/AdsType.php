@@ -15,6 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -31,10 +32,10 @@ class AdsType extends AbstractType
             
             ->add('city', EntityType::class, [
                 'class' => Cities::class,
-                'data' => $options['city'], // Utilisez la ville passée en option
-                'mapped' => false, // Ne mappez pas directement à l'entité Ads
-                'choice_label' => 'name', // Ou toute autre propriété que vous souhaitez afficher
-                'attr' => ['style' => 'display:none;'], // Ajoutez du CSS pour cacher visuellement le champ
+                'data' => $options['city'], 
+                'mapped' => false,
+                'choice_label' => 'name', 
+                'attr' => ['style' => 'display:none;'], 
             ])
 
             ->add('photos', CollectionType::class, [
@@ -56,14 +57,20 @@ class AdsType extends AbstractType
                 'class' => Status::class,
                 'choice_label' => 'name',
             ])
-            ->add('price',TextType::class);
+            ->add('price',MoneyType::class, [
+                'required' => false,
+                'currency' => 'EUR',
+                'attr' => [
+                    'class' => 'form-control', 
+                 
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Ads::class,
-            // Ajoutez l'option city pour lier l'annonce à la ville
             'city' => null,
         ]);
     }

@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   var markAsReadButtons = document.querySelectorAll(".mark-as-read");
-
+  //pour chaque bouton, au click, récupere l'id du message
+  //et appelle fonction markAsRead (définie plus bas)
   markAsReadButtons.forEach(function (button) {
     button.addEventListener("click", function () {
       var messageId = button.getAttribute("data-message-id");
@@ -8,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
       markAsRead(messageId);
     });
   });
+  //Requete ajax sur le message pour faire un update du message
 
   function markAsRead(messageId) {
     // Faites une requête AJAX pour mettre à jour le statut isRead dans la base de données
@@ -17,27 +19,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4 && xhr.status === 200) {
-        // Mettez à jour l'affichage côté client immédiatement
+        //Déclare un event à dispatcher dans toute l'appli(pour utiliser dans navbar)
+        var event = new Event("messageRead");
+        document.dispatchEvent(event);
+
         var messageElement = document.querySelector(".message-id-" + messageId);
         if (messageElement) {
-          // Vérifiez d'abord l'état actuel avant de faire des modifications
+          //verif si message est lu ou non
           var isRead = messageElement.classList.contains("message-read");
 
           if (!isRead) {
-            // Mettez à jour l'élément uniquement si le message n'est pas déjà lu
+            //Mise à jour si pas lu
             var notReadElement =
               messageElement.querySelector(".message-not-read");
             var readElement = messageElement.querySelector(".message-read");
 
             if (notReadElement && readElement) {
               notReadElement.style.display = "none";
-
               readElement.style.display = "block";
             }
-
-            // Ajoutez une classe pour indiquer que le message est lu
             messageElement.classList.add("message-read");
           }
+          // Après avoir marqué le message comme lu, mettez à jour le nombre de messages non lus dans la barre de navigation
+          updateUnreadMessagesCount();
         }
       }
     };

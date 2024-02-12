@@ -1,24 +1,53 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<h1>Messagerie</h1>
-    {% for message in messages %}
+    <h1>Messagerie</h1>
+
+   {% for message in messages|reverse %}
+    <div class="received-message">
         <div class="message-id-{{ message.id }}">
             <p>Message de {{ message.sender.pseudo }} pour l'annonce : <b>{{ message.ad.title }}</b></p>
             <p>Objet : {{ message.title }}</p>
-            <p>Message : {{ message.text }}</p>
             <p>Envoyé le : {{ message.createdAt|date('d/m/Y à H:i') }}</p>
-            <p class='message-not-read' {% if message.isRead %} style="display: none;" {% endif %}>
-            Message Non Lu <i class="far fa-envelope" style="color: red;"></i>
+            {# paragraphe qui limite le texte initial, si il est trop grand, lien pour agrandir et bouton pr reduire#}
+            <p class="short-text" data-full-text="{{ message.text }}">
+                {{ message.text|slice(0, 250) }}
+                {% if message.text|length > 250 %}
+                    <span class="ellipsis">...</span>
+                    <button class="btn btn-more-text"><i class="fa-sharp fa-solid fa-angles-down" style="display:block;"></i></button>
+                {% else %}
+                    <button class="btn btn-more-text"><i class="fa-sharp fa-solid fa-angles-down" style="display:none;"></i></button>
+                {% endif %}
+                
             </p>
-            <p class='message-read' {% if not message.isRead %} style="display: none;" {% endif %}>Message lu <i class="fas fa-check-circle" style="color: green;"></i></p>
-            {% if not message.isRead %}<button class="mark-as-read" data-message-id="{{ message.id }}">Marquer comme lu</button> {% endif %}
-            <button class='send-message btn btn-info'><a href="{{ path('app_sendMessage', {'adId': message.ad.id, 'messageId': message.id}) }}">Répondre</a></button>
+    {# emplacement pour le full text#}
+            <p class="full-text">{{ message.text }}</p>
+            <button class="btn btn-reduce-text" style="display:none;"><i class="fa-sharp fa-solid fa-angles-up"></i></button>  
+            {% if message.receiver == app.user %}
+                <p class='message-not-read' {% if message.isRead %} style="display: none;" {% endif %}>
+                    Message Non Lu <i class="far fa-envelope" style="color: red;"></i>
+                </p>
+                <p class='message-read' {% if not message.isRead %} style="display: none;" {% endif %}>Message lu <i class="fas fa-check-circle" style="color: green;"></i></p>
+                
+                {% if not message.isRead %}
+                    <button class="mark-as-read" data-message-id="{{ message.id }}">Marquer comme lu</button>
+                {% endif %}
+                    <button class='send-message btn btn-info' {% if message.isRead %} style="display: none;" {% endif %}>
+                    <a href="{{ path('app_sendMessage', {'adId': message.ad.id, 'messageId': message.id}) }}">Répondre</a></button>
+            {% endif %}
+            <button class="view-conversation btn btn-secondary">
+                <a href="{{ path('app_show_conversation', { 'messageId': message.id}) }}">Voir la conversation</a>
+            </button>
         </div>
-    {% endfor %}
+       
+    </div>
+{% endfor %}
+
 {% endblock %}
 
 {% block javascripts %}
+
     <script src="{{ asset('js/markAsRead.js') }}"></script>
     <script src="https://kit.fontawesome.com/f924bf4e1d.js" crossorigin="anonymous"></script>
+    <script src = "{{ asset('js/seeMore.js' )}}"></script>
 {% endblock %}

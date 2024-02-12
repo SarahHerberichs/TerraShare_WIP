@@ -49,12 +49,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'User', targetEntity: Message::class)]
     private Collection $receivedMessages;
 
+    #[ORM\OneToMany(mappedBy: 'User1', targetEntity: Conversation::class)]
+    private Collection $User2;
+
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
         $this->ads = new ArrayCollection();
         $this->sendedMessages = new ArrayCollection();
         $this->receivedMessages = new ArrayCollection();
+        $this->User2 = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -231,6 +235,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($sendedMessage->getReceiver() === $this) {
                 $sendedMessage->setReceiver(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Conversation>
+     */
+    public function getUser2(): Collection
+    {
+        return $this->User2;
+    }
+
+    public function addUser2(Conversation $user2): static
+    {
+        if (!$this->User2->contains($user2)) {
+            $this->User2->add($user2);
+            $user2->setUser1($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser2(Conversation $user2): static
+    {
+        if ($this->User2->removeElement($user2)) {
+            // set the owning side to null (unless already changed)
+            if ($user2->getUser1() === $this) {
+                $user2->setUser1(null);
             }
         }
 

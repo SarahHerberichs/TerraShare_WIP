@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Toutes les annonces{% endblock %}
+{% block title %}{{ ad.title }} à {{ ad.city.name }}{% endblock %}
 
 {% block body %}
     
@@ -22,9 +22,14 @@
         <div id="popupImageContainer"></div>
         <div id="nextArrow" class="arrow" onclick='nextImage()'>&gt;</div>
     </div>
-
-    <button class='send-message btn btn-secondary '><a href="{{ path('app_sendMessage', {'adId': ad.id }) }}"> Contactez l'annonceur<a/></button>
-     
+    {% if app.user %}
+        <button class='send-message btn btn-secondary '><a href="{{ path('app_sendMessage', {'adId': ad.id }) }}"> Contactez l'annonceur<a/></button>
+    {% else %}
+          <div id="errorMessage" class="alert alert-danger">
+                Veuillez vous connecter pour contacter l'utilisateur.
+            </div>
+       <button> <a href= "/login" >login </a> </button>
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}

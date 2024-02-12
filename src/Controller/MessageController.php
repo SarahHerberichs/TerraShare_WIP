@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Message;
 use App\Form\MessageType;
+use App\Entity\Conversation;
 use App\Repository\AdsRepository;
+use App\Repository\ConversationRepository;
 use App\Repository\UserRepository;
 use App\Repository\MessageRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,7 +19,27 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class MessageController extends AbstractController
 {
-    #[Route('/sendMessage/{adId}/{messageId}', name: 'app_sendMessage')]
+    //créer une route reliant la navbar et l'entitéMessage pour trouver le nb de message non lu par la personne
+
+    #[Route("/get-unread-messages-count", name:"get_unread_messages_count")]
+    public function getUnreadMessagesCount(MessageRepository $messageRepository): JsonResponse
+    {
+        $user = $this->getUser();
+        
+        if (!$user) {
+            // L'utilisateur n'est pas connecté
+            return new JsonResponse(['count' => 0]);
+        }
+        
+        $unreadMessagesCount = $messageRepository->count(['receiver' => $user, 'isRead' => false]);
+
+        return new JsonResponse(['count' => $unreadMessagesCount]);
+    }
+
+
+
+
+    #[Route('/sendMessage/{adId}/{messageId?}', name: 'app_sendMessage')]
     public function sendMessage(
         Request $request,
         EntityManagerInterface $em,
@@ -27,46 +49,74 @@ class MessageController extends AbstractController
         UserRepository $userRepository,
         AdsRepository $adsRepository,
         MessageRepository $messageRepository,
+        ConversationRepository $conversationRepository,
+    ): Response {
+            //Verifier que le Sender
+            $sender = $tokenStorage->getToken()->getUser();
+    
+            // Cherche l'annonce dont l'id est dans l'url
+            $ad = $adsRepository->find($adId);
+            
+            // Initialisation de $receiver
+            $receiver = null;
+            
 
-    ): Response
-    {
-        $sender =  $tokenStorage->getToken()->getUser();
-      
-        //Si l'Ad trouvée : ad.userId = $sender ALORS
-        //Cherche l'annonce dont l'id est dans l'url
-        $ad = $adsRepository->find($adId);
-        //Cherche celui qui a posté l'annonce
-        $poster = $ad->getUser();
-        $receiver = $messageRepository->find($messageId)->getSender();
+            // Si le messageID a été renseigné dans l'URL
+            if ($messageId !== null) {
+                $message = $messageRepository->find($messageId);
+        
+                // Si le message existe et l'utilisateur en cours est le destinataire ou l'expéditeur du message
+                if ($message && ($message->getReceiver() === $sender || $message->getSender() === $sender)) {
+                    $receiver = ($message->getReceiver() === $sender) ? $message->getSender() : $message->getReceiver();
+                }
+            } else {
+                // Si aucun message n'existe encore, définir le receiver sur le poster
+                $receiver = $ad->getUser();
+            }
+        
+            $existingConversation = $conversationRepository->findConversationByUsersAndAd($sender, $receiver, $ad);
+        
+            $form = $this->createForm(MessageType::class);
+            $form->handleRequest($request);
+    
+            if ($form->isSubmitted() && $form->isValid()) {
+            
+                $message = new Message();
+                $message->setTitle($form->get('title')->getData());
+                $message->setText($form->get('text')->getData());
+                $message->setSender($sender);
+                $message->setReceiver($receiver);
+                $message->setAd($ad);
+                $message->setIsRead(false);
+                $em->persist($message);
+                $em->flush();
+    
+                // Si la conversation n'existe pas encore, ajouter la conversation
+                if (!$existingConversation) {
+                    $conversation = new Conversation();
+                    $conversation->setAd($ad);
+                    $conversation->setUser1($sender);
+                    $conversation->setUser2($receiver);
+                    $em->persist($conversation);
+                    $em->flush();
+            
+                    // Attribuer la conversation au message maintenant que la conversation a un ID
+                    $message->setConversation($conversation);
+                    $em->persist($message);
+                    $em->flush();
+                } else {
+                    // Si la conversation existe déjà, attribuer la conversation existante au message
+                    $message->setConversation($existingConversation);
+                    $em->persist($message);
+                    $em->flush();
+                }
+        
+                $this->addFlash('success', 'Votre message a été envoyé avec succès!');
+                return $this->redirectToRoute('app_home');
        
-        //Si celui qui a posté l'annonce n'est pas celui dont la session est en cours, c'est que l'utilisateur en cours veut contacter l'annonceur
-        if ($poster !== $sender ) {
-            $receiver = $ad->getUser();
-            //Sinon, c'est que l'utilisateur (qui est l'annonceur initial), veut contacter l'envoyeur du message initial
-        } else {
-            //retrouver le posteur de l'annonce initiale (message.sender_id) là ou message.ad_Id  = {adId}
-            $receiver = $messageRepository->find($messageId)->getSender();
-        }
-       
-        //Seulement dans le cadre d'un contact au click sur l'annonce, sinon le $receiver est (dans la page html my_messages) : message.sender.id
-         
-        $form = $this->createForm(MessageType::class);
-        $form->handleRequest($request);
+            
+            }     
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $message = new Message();
-            $message->setTitle($form->get('title')->getData());
-            $message->setText($form->get('text')->getData());
-            $message->setSender($sender);
-            $message->setReceiver($receiver);
-            $message->setAd($ad);
-            $message->setIsRead(false);
-            $em->persist($message);
-            $em->flush();
-            dd($message);
-            $this->addFlash('success', 'Votre message a été envoyé avec succès!');
-            return $this->redirectToRoute('app_home');
-        }
         return $this->render('messages/index.html.twig', [
             'form' => $form->createView(),
             'receiver' => $receiver,

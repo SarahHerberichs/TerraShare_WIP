@@ -1,4 +1,3 @@
-console.log("salut");
 const addFormToCollection = (e) => {
   const collectionPhoto = document.querySelector(
     e.currentTarget.dataset.collection
@@ -10,7 +9,6 @@ const addFormToCollection = (e) => {
     /__name__/g,
     collectionPhoto.dataset.index
   );
-  console.log(item);
 
   let btnSupprimer = document.createElement("button");
   btnSupprimer.className = "btn btn-info mt-3 btn-supprimer";

@@ -55,6 +55,9 @@ class Ads
      #[ORM\OneToMany(mappedBy: 'Ad', targetEntity: Message::class)]
      private Collection $messages;
 
+     #[ORM\OneToMany(mappedBy: 'Ad', targetEntity: Conversation::class)]
+     private Collection $conversation;
+
    
     public function __construct()
     {
@@ -62,6 +65,7 @@ class Ads
         $this->createdAt = new \DateTimeImmutable();
         $this->photos = new ArrayCollection();
         $this->messages = new ArrayCollection();
+        $this->conversation = new ArrayCollection();
     
     }
     public function getId(): ?int
@@ -247,6 +251,14 @@ class Ads
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Conversation>
+     */
+    public function getConversation(): Collection
+    {
+        return $this->conversation;
     }
 
   
