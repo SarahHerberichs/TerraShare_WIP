@@ -19,7 +19,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class MessageController extends AbstractController
 {
-    //créer une route reliant la navbar et l'entitéMessage pour trouver le nb de message non lu par la personne
 
     #[Route("/get-unread-messages-count", name:"get_unread_messages_count")]
     public function getUnreadMessagesCount(MessageRepository $messageRepository): JsonResponse
@@ -27,7 +26,7 @@ class MessageController extends AbstractController
         $user = $this->getUser();
         
         if (!$user) {
-            // L'utilisateur n'est pas connecté
+            // Si l'utilisateur n'est pas connecté
             return new JsonResponse(['count' => 0]);
         }
         
@@ -35,8 +34,6 @@ class MessageController extends AbstractController
 
         return new JsonResponse(['count' => $unreadMessagesCount]);
     }
-
-
 
 
     #[Route('/sendMessage/{adId}/{messageId?}', name: 'app_sendMessage')]
@@ -51,21 +48,20 @@ class MessageController extends AbstractController
         MessageRepository $messageRepository,
         ConversationRepository $conversationRepository,
     ): Response {
-            //Verifier que le Sender
+            //Le sender est l'utilisateur actuellement authentifié
             $sender = $tokenStorage->getToken()->getUser();
-    
             // Cherche l'annonce dont l'id est dans l'url
             $ad = $adsRepository->find($adId);
-            
             // Initialisation de $receiver
             $receiver = null;
-            
 
             // Si le messageID a été renseigné dans l'URL
             if ($messageId !== null) {
+                //Récupère ttes les infos sur le message
                 $message = $messageRepository->find($messageId);
         
-                // Si le message existe et l'utilisateur en cours est le destinataire ou l'expéditeur du message
+                // Si le message existe et l'utilisateur en cours est le destinataire ou l'expéditeur du message,
+                //Détermine l'autre interlocuteur
                 if ($message && ($message->getReceiver() === $sender || $message->getSender() === $sender)) {
                     $receiver = ($message->getReceiver() === $sender) ? $message->getSender() : $message->getReceiver();
                 }
@@ -73,12 +69,12 @@ class MessageController extends AbstractController
                 // Si aucun message n'existe encore, définir le receiver sur le poster
                 $receiver = $ad->getUser();
             }
-        
+            //Cherche la conversation entre les deux parties autour de l'annonce
             $existingConversation = $conversationRepository->findConversationByUsersAndAd($sender, $receiver, $ad);
         
             $form = $this->createForm(MessageType::class);
             $form->handleRequest($request);
-    
+            //Insertion du nouveau message dans la BDD
             if ($form->isSubmitted() && $form->isValid()) {
             
                 $message = new Message();
@@ -110,11 +106,8 @@ class MessageController extends AbstractController
                     $em->persist($message);
                     $em->flush();
                 }
-        
                 $this->addFlash('success', 'Votre message a été envoyé avec succès!');
                 return $this->redirectToRoute('app_home');
-       
-            
             }     
 
         return $this->render('messages/index.html.twig', [
@@ -124,6 +117,7 @@ class MessageController extends AbstractController
             'ad' => $ad
         ]);
     }
+    //Consultation des messages
     #[Route('/myMessages', name: 'my_messages')]
     public function myMessages(
         Request $request,
@@ -141,29 +135,28 @@ class MessageController extends AbstractController
         ]);
       
     }
+    //Passe le message en Lu
+    #[Route('/update-message-status/{id}', name: 'update_message_status')]
+        public function updateMessageStatus($id, EntityManagerInterface $entityManager, Request $request)
+        {
+            $message = $entityManager->getRepository(Message::class)->find($id);
 
-#[Route('/update-message-status/{id}', name: 'update_message_status')]
-    public function updateMessageStatus($id, EntityManagerInterface $entityManager, Request $request)
-    {
-        $message = $entityManager->getRepository(Message::class)->find($id);
+            if (!$message) {
+                return new JsonResponse(['error' => 'Message not found'], 404);
+            }
 
-        if (!$message) {
-            return new JsonResponse(['error' => 'Message not found'], 404);
+            if ($request->isXmlHttpRequest()) {
+                // Si la requête est une requête AJAX n bascule le message comme lu et modif la BDD
+                $message->setIsRead(true);
+                $entityManager->flush();
+
+                return new JsonResponse(['success' => true]);
+            } else {
+                // Si la requête n'est pas une requête AJAX
+                $message->setIsRead(true);
+                $entityManager->flush();
+
+                return new JsonResponse();
+            }
         }
-
-        if ($request->isXmlHttpRequest()) {
-            // Si la requête est une requête AJAX
-            $message->setIsRead(true);
-            $entityManager->flush();
-
-            return new JsonResponse(['success' => true]);
-        } else {
-            // Si la requête n'est pas une requête AJAX
-            $message->setIsRead(true);
-            $entityManager->flush();
-
-            // Notez que nous ne renvoyons rien ici pour éviter le rafraîchissement de la page
-            return new JsonResponse();
-        }
-    }
 }

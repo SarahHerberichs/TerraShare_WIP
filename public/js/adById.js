@@ -40,14 +40,14 @@ document.addEventListener("DOMContentLoaded", function () {
     popupImage.src = imageContainer.getElementsByTagName("img")[index].src;
     popupImage.alt = "Popup Image";
 
-    //initialise à vide la div et lui injecte l'image paramétrée ci-dessus
+    //Initialise à vide la div et lui injecte l'image paramétrée ci-dessus
     popupImageContainer.innerHTML = "";
     popupImageContainer.appendChild(popupImage);
     updateArrowsVisibility();
     popup.style.display = "flex";
   }
 
-  //update la visibilité des fleches selon l'index de l'image parcourue
+  //Udate la visibilité des fleches selon l'index de l'image parcourue
   function updateArrowsVisibility() {
     prevArrow.style.display = currentIndex > 0 ? "block" : "none";
     nextArrow.style.display =
@@ -90,5 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
       openPopup(currentIndex + 1);
     }
   }
+  /*----------------------------------------------------------------------------------------------------------------*/
+  /*----------------------------------------------------------------------------------------------------------------*/
   /*----------------------------------------------------------------------------------------------------------------*/
 });

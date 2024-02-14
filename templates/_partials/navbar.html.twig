@@ -19,16 +19,14 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{path('app_consult_ads')}}">Consulter les Annonces</a>
                 </li>
-                
+                <li><button><a class="nav-link" href="{{path('app_donation')}}">Faire un Don</a></button></li>
             </ul>
             <form class="d-flex nav-btns">
-                
                 {% if app.user %}
                 <a href="{{path('my_ads',{'userId': app.user.id})}}" class="btn btn-info">Mes Annonces</a>
 
                 <div class='navbar-btn-message'> 
                     <a href="{{ path('my_messages') }}" class="btn btn-secondary my-messages-btn">Mes Messages<span id="unread-messages-count" data-route="{{ path('get_unread_messages_count') }}">0</span></a>
-
                 </div>
                 <a href="/logout" class="btn btn-danger">Deconnexion</a>
 

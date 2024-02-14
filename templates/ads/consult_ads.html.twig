@@ -5,9 +5,9 @@
 {% block body %}
     <h1>Toutes les annonces</h1>
 
-   
+    <!-- Formulaire de filtres -->
     <form method="get" class="form-filter-ads">
-     {# Filtre par département #}
+        {# Filtre par département #}
         <div class="form-element block-department">
             <label for="department">Filtrer par département :</label>
             <select name="department" id="department">
@@ -20,94 +20,105 @@
             </select>
         </div>
         <div class="form-element block-type">
-            {# Filtre par type :Materiel/Terrain/Personne #}
+            {# Filtre par type : Materiel/Terrain/Personne #}
             <label for="type">Filtrer par type :</label>
             <select name="type" id="type">
-            <option value="">Tous les types</option>
-            {% for type in types %}
-                <option value="{{ type.id }}" {% if type.id == selectedType %}selected{% endif %}>
-                    {{ type.name }}
-                </option>
-            {% endfor %}
+                <option value="">Tous les types</option>
+                {% for type in types %}
+                    <option value="{{ type.id }}" {% if type.id == selectedType %}selected{% endif %}>
+                        {{ type.name }}
+                    </option>
+                {% endfor %}
             </select>
         </div>
         <div class="form-element block-transaction">
-            {#Filtre par transaction :vente/loc/service #}
+            {# Filtre par transaction : vente/loc/service #}
             <label for="transaction">Filtrer par transaction :</label>
             <select name="transaction" id="transaction">
-            <option value="">Toutes les transactions</option>
-            {% for transaction in transactions %}
-                <option value="{{ transaction.id }}" {% if transaction.id == selectedTransaction %}selected{% endif %}>
-                    {{ transaction.name }}
-                </option>
-            {% endfor %}
+                <option value="">Toutes les transactions</option>
+                {% for transaction in transactions %}
+                    <option value="{{ transaction.id }}" {% if transaction.id == selectedTransaction %}selected{% endif %}>
+                        {{ transaction.name }}
+                    </option>
+                {% endfor %}
             </select>
         </div>
         <div class="form-element block-status">
-            {#Filtre par Status : Disponnible / Proposition #}
+            {# Filtre par Status : Disponnible / Proposition #}
             <label for="status">Filtrer par recherche :</label>
             <select name="status" id="status">
-            <option value="">Proposition/Recherche</option>
-            {% for stat in status %}
-                <option value="{{ stat.id }}" {% if stat.id == selectedStatus %}selected{% endif %}>
-                    {{ stat.name }}
-                </option>
-            {% endfor %}
+                <option value="">Proposition/Recherche</option>
+                {% for stat in status %}
+                    <option value="{{ stat.id }}" {% if stat.id == selectedStatus %}selected{% endif %}>
+                        {{ stat.name }}
+                    </option>
+                {% endfor %}
             </select>
         </div>
         <div class="form-element block-price">
             <label for="minPrice">Prix minimum :</label>
             <input type="number" name="minPrice" id="minPrice" min="0" placeholder="Min" value="{{ selectedMinPrice }}">
         </div>
-
         <div class="form-element block-price">
             <label for="maxPrice">Prix maximum :</label>
             <input type="number" name="maxPrice" id="maxPrice" min="0" placeholder="Max" value="{{ selectedMaxPrice }}">
         </div>
         
         <button type="submit" class="btn btn-primary">Filtrer</button>
-
     </form>
 
+    <!-- Annonces -->
     {% if ads is empty %}
         <p>Aucune annonce pour votre requête.</p>
     {% else %}
         <ul class= "list-ads">
-           {% for ad in ads %}
-                {# <li class="each-ad"> #}
+            {% for ad in ads %}
                 <a href="{{ path('app_consult_ad_by_id', {'id': ad.id}) }}" class="each-ad">
                     <div class="text-content">
-
                         <h3>{{ ad.title }}</h3> 
+                        <p class='created-ad'> crée le {{ ad.createdAt|date('d/m/Y H:i:s') }}</p>
                         <p class='city-name'> à {{ ad.city.name|capitalize }}</p>
                         {% if ad.type is not null %}
-                            <p> Type : {{ ad.type.name }} </p>
+                            <p class="type"> Type : {{ ad.type.name }} </p>
                         {% endif %}
                         {% if ad.status is not null %}
-                            <p> Status : {{ ad.status.name }} </p>
+                            <p class="status"> Status : {{ ad.status.name }} </p>
                         {% endif %}
-
                         {% if ad.transaction is not null %}
-                            <p> Transaction : {{ ad.transaction.name }}</p>
+                            <p class="transaction"> Transaction : {{ ad.transaction.name }}</p>
                         {% endif %}
-
                         {% if ad.price is not null %}
-                            <p>Prix : {{ ad.price }} €</p>
+                            <p class="price">Prix : {{ ad.price }} €</p>
                         {% endif %}
                     </div>
-
                     {% for photo in ad.photos %}
-                    {% if loop.first %}
-                    
-                        <div class="img-container img-list">
-                            <img src="{{ asset('img/' ~ photo.name)}}" alt="" class="main-img-ad img-list card-img-top mt-3">   
-                        </div>
-                    
-                    {% endif %}
-                   {% endfor %}
+                        {% if loop.first %}
+                            <div class="img-container img-list">
+                                <img src="{{ asset('img/' ~ photo.name)}}" alt="" class="main-img-ad img-list card-img-top mt-3">   
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                 </a>
-                {# </li> #}
             {% endfor %}
         </ul>
+        
+        <!-- Pagination avec prise en compte des filtres -->
+    <nav aria-label="Page navigation">
+    <ul class="pagination">
+        {% for pageNumber in 1..totalPages %}
+            <li class="page-item {% if currentPage == pageNumber %}active{% endif %}">
+                <a class="page-link" href="{{ path('app_consult_ads', {
+                    'page': pageNumber,
+                    'department': selectedDepartment,
+                    'type': selectedType,
+                    'status': selectedStatus,
+                    'transaction': selectedTransaction,
+                    'minPrice': selectedMinPrice,
+                    'maxPrice': selectedMaxPrice
+                }) }}">{{ pageNumber }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</nav>
     {% endif %}
 {% endblock %}

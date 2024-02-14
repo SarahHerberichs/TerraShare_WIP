@@ -29,23 +29,25 @@ class AdsRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    //Cherche les ads selon filtres demandés
     public function findByFilters($departmentNumber, $type, $status, $transaction, $minPrice, $maxPrice)
     {
         $queryBuilder = $this->createQueryBuilder('a');
+        //Filtre par departement si un filtre est appliqué
         if($departmentNumber){
             $queryBuilder
             ->join('a.city', 'c')
             ->andWhere('c.department_number = :departmentNumber')
             ->setParameter('departmentNumber', $departmentNumber);
         }
-           
-    
+        //Filtre par type si un filtre est appliqué
         if ($type) {
             $queryBuilder
                 ->join('a.Type', 't')
                 ->andWhere('t.id = :type')
                 ->setParameter('type', $type);
         }
+         //Filtre par dstatus si un filtre est appliqué
         if ($status) {
             $queryBuilder
             ->join ('a.Status', 's')

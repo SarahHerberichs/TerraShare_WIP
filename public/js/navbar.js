@@ -1,25 +1,11 @@
-// document.addEventListener("DOMContentLoaded", function () {
-//   var unreadMessagesCountElement = document.getElementById(
-//     "unread-messages-count"
-//   );
-//   //utilisation de l'api dataset pour récupérer dataroute (dans la balise qui attend le nb de message recu dont la data-route mene au chemin recupérant le nb de msg)
-//   var route = unreadMessagesCountElement.dataset.route;
-
-//   fetch(route)
-//     .then((response) => response.json())
-//     .then((data) => {
-//       //injection du nb de msg recus
-//       unreadMessagesCountElement.textContent = data.count;
-//     });
-// });
-// Ajoutez la méthode updateUnreadMessagesCount à votre fichier navbar.js
-
 function updateUnreadMessagesCount() {
+  //contient le nb de msg non lus
   var unreadMessagesCountElement = document.getElementById(
     "unread-messages-count"
   );
+  //url de la route qui récupere le nb de msg non lus grace à la balise data-route
   var route = unreadMessagesCountElement.dataset.route;
-
+  //Fetch dans l'url et met à jour l'élément qui contient le nb de msg non lus
   fetch(route)
     .then((response) => response.json())
     .then((data) => {
@@ -28,15 +14,5 @@ function updateUnreadMessagesCount() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  var unreadMessagesCountElement = document.getElementById(
-    "unread-messages-count"
-  );
-
-  var route = unreadMessagesCountElement.dataset.route;
-
-  fetch(route)
-    .then((response) => response.json())
-    .then((data) => {
-      unreadMessagesCountElement.textContent = data.count;
-    });
+  document.addEventListener("DOMContentLoaded", updateUnreadMessagesCount);
 });

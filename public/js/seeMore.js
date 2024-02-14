@@ -56,10 +56,5 @@ document.addEventListener("DOMContentLoaded", function () {
       fullText.style.display = "none";
       reduceTextBtn.style.display = "none";
     });
-
-    // Check if the text is truncated initially
-    // if (shortText.textContent.length < 250) {
-    //   reduceTextBtn.style.display = "none";
-    // }
   });
 });

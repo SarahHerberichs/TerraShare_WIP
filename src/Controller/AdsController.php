@@ -11,15 +11,16 @@ use Psr\Log\LoggerInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Lexer\Token;
 use App\Repository\AdsRepository;
+use App\Repository\TypeRepository;
 use App\Repository\UserRepository;
 use App\Repository\CitiesRepository;
 use App\Repository\PhotosRepository;
+use App\Repository\StatusRepository;
 use App\Services\SimpleUploadService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\DepartmentsRepository;
-use App\Repository\StatusRepository;
 use App\Repository\TransactionRepository;
-use App\Repository\TypeRepository;
+use App\Services\ImageCompressionService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,7 +29,6 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-
 
 
 class AdsController extends AbstractController
@@ -53,7 +53,7 @@ class AdsController extends AbstractController
         CitiesRepository $citiesRepository,
         SerializerInterface $serializer
     ): Response {
-        //extrait la valeur du parametre de requete "search"-si pas de parametre,utilise valeur nulle
+        //Extrait la valeur du parametre de requete "search"-si pas de parametre,utilise valeur nulle
         $searchQuery = $request->query->get('search', '');
         //Voir Methode dans Repository
         $cities = $citiesRepository->findBySearchQuery($departmentNumber, $searchQuery);
@@ -63,12 +63,10 @@ class AdsController extends AbstractController
             AbstractNormalizer::IGNORED_ATTRIBUTES => ['department_number'],
         ]);
     
-        // Create a JsonResponse
         $response = new JsonResponse($jsonData, JsonResponse::HTTP_OK, [], true);
     
         return $response;
     }
-
 
     //Formulaire de création d'annonce (lié à l'entité Cities)
     #[Route('/create-ad/{cityId}', name: 'create_ad')]
@@ -78,7 +76,10 @@ class AdsController extends AbstractController
          CitiesRepository $citiesRepository,
           EntityManagerInterface $em,
           TokenStorageInterface $tokenStorage,
-          SimpleUploadService $simpleUploadService): Response
+          SimpleUploadService $simpleUploadService,
+          ImageCompressionService $imageCompressionService
+          ): Response
+        
     {
         
         $user = $tokenStorage->getToken()->getUser();
@@ -95,89 +96,119 @@ class AdsController extends AbstractController
         $form = $this->createForm(AdsType::class, $ad, ['city' => $city]);
         $form->handleRequest($request);
         
-
         if ($form->isSubmitted() && $form->isValid()) {
             $photos = $request->files->all();
-            
+           
             if (!empty($photos)){
+               
                 $images = $photos['ads']['photos'];
                 foreach($images as $image){
                     $new_photos = new Photos();
                     $image_name = $image['name'];
+                    //taille image loadée
+                    $imageSizeKb = (($image['name']->getSize()))/1024;
+                    //Défini une taille max d'image
+                    $maxImageSizeKb = 100;
+                    //upload de l'image
                     $new_photo = $simpleUploadService->uploadImage($image_name);
-                    $new_photos->setName($new_photo);
+                    //Si taille max dépassée, défini un taux de compression à passer au service compression
+                    if ($imageSizeKb > $maxImageSizeKb ) {
+                        //Recherche le taux de compression à appliquer, et le passe au compresseur(compresse et redimensionne)
+                        $compressTaux =($maxImageSizeKb * 100)/$imageSizeKb;
+               
+                        $imageCompressionService->compressImage($compressTaux,$new_photo);
+                        $new_photos->setName("compress_".$new_photo);
+                    }
                     $ad->addPhoto($new_photos);
                      
                     $ad->setCity($form->get('city')->getData());
                     
                     $em->persist($ad);
                     $em->flush();
-                    // Redirigez vers une page de confirmation ou ailleurs
+            
                     return $this->redirectToRoute('app_home');
                 }
+       
             } else{
                 $errorMessage = 'Postez au moins une photo SVP';
             }
-
+     
         }
 
-        // Affichez le formulaire dans le template
+        //Affichage du formulaire dans le template
         return $this->render('ads/create_ad.html.twig', [
             'form' => $form->createView(),
             'city' => $city,
             'errorMessage' => $errorMessage
         ]);
     }
-    //voir Annonces
+   
     #[Route('/consult-ads', name: 'app_consult_ads')]
     public function consultAds(
         Request $request,
         AdsRepository $adsRepository,
         DepartmentsRepository $departmentsRepository,
-        PhotosRepository $photosRepository,
         TypeRepository $typeRepository,
         TransactionRepository $transactionRepository,
-        StatusRepository $statusRepository): Response
-    {
-
-        $ads = $adsRepository->findAll();
-      
-        $departments = $departmentsRepository->findBy([], ['number' => 'ASC']);    
+        StatusRepository $statusRepository
+    ): Response {
         $selectedDepartment = $request->query->get('department', null);
-
-        $types = $typeRepository->findAll();
-        $selectedType = $request->query->get('type',null);
-         
-        $status = $statusRepository->findAll();
-        $selectedStatus = $request->query->get('status',null);
-
-        $transactions =$transactionRepository->findAll();
-        $selectedTransaction= $request->query->get('transaction',null);
-
+        $selectedType = $request->query->get('type', null);
+        $selectedStatus = $request->query->get('status', null);
+        $selectedTransaction = $request->query->get('transaction', null);
         $selectedMinPrice = $request->query->get('minPrice', null);
         $selectedMaxPrice = $request->query->get('maxPrice', null);
-
-        // if ($selectedDepartment) {
-            // Appliquez le filtre par département
-            $ads = $adsRepository->findByFilters($selectedDepartment,$selectedType,$selectedStatus,$selectedTransaction,$selectedMinPrice,$selectedMaxPrice);
-            // Si aucun résultat n'est trouvé, redirigez vers la même page sans le paramètre de département
-        // } 
-      
+    
+        // Récupération des annonces sans filtres pour calculer le total
+        $allAds = $adsRepository->findAll();
+        
+        // Filtrage des annonces selon la valeur des filtres récupérés par request->query (formulaire utilisateur)
+        $ads = $adsRepository->findByFilters(
+            $selectedDepartment,
+            $selectedType,
+            $selectedStatus,
+            $selectedTransaction,
+            $selectedMinPrice,
+            $selectedMaxPrice,
+        );
+        //Tri des ads en ordre décroissant
+        usort($ads, function($a, $b) {
+            return $b->getCreatedAt() <=> $a->getCreatedAt();
+        });
+    
+        // Pagination
+        $currentPage = $request->query->getInt('page', 1);
+        $perPage = 3;
+        $totalItems = count($ads);
+        $totalPages = ceil($totalItems / $perPage);
+        $offset = ($currentPage - 1) * $perPage;
+        $ads = array_slice($ads, $offset, $perPage);
+    
+        $departments = $departmentsRepository->findBy([], ['number' => 'ASC']);
+        $types = $typeRepository->findAll();
+        $status = $statusRepository->findAll();
+        $transactions = $transactionRepository->findAll();
+    
         return $this->render('ads/consult_ads.html.twig', [
             'ads' => $ads,
             'departments' => $departments,
+            'types' => $types,
+            'status' => $status,
+            'transactions' => $transactions,
             'selectedDepartment' => $selectedDepartment,
-            'types'=>$types,
-            'selectedType'=> $selectedType,
-            'transactions'=>$transactions,
-            'selectedTransaction'=> $selectedTransaction,
-            'status'=>$status,
-            'selectedStatus'=> $selectedStatus,
+            'selectedType' => $selectedType,
+            'selectedStatus' => $selectedStatus,
+            'selectedTransaction' => $selectedTransaction,
             'selectedMinPrice' => $selectedMinPrice,
-            'selectedMaxPrice' => $selectedMaxPrice
+            'selectedMaxPrice' => $selectedMaxPrice,
+            'totalPages' => $totalPages,
+            'currentPage' => $currentPage,
+            'totalItems' => $totalItems, 
+            'allAds' => $allAds, 
         ]);
     }
-
+    
+      
     #[Route('/consult-ad/{id}', name: 'app_consult_ad_by_id')]
     public function consultAdById(
         int $id,
@@ -194,13 +225,14 @@ class AdsController extends AbstractController
             'photos'=> $photos
         ]);
     }
+
     #[Route ('/my-ads', name :'my_ads')]
     public function myAds (
         AdsRepository $adsRepository,
         TokenStorageInterface $tokenStorage
     ) :Response 
     {
-      // Récupérer l'utilisateur actuellement authentifié
+      // Récupération de l'utilisateur actuellement authentifié
         $user = $tokenStorage->getToken()->getUser();
         $userId = $user instanceof User ? $user->getId() : null;
     
@@ -222,10 +254,10 @@ class AdsController extends AbstractController
          SimpleUploadService $simpleUploadService
          ): Response
     {
-        //Récup de l'annonce à modifier
+        //Récupération de l'annonce à modifier
         $ad = $adsRepository->find($adId);
 
-        //Récup de l'utilisateur en cours
+        //Récupération de l'utilisateur actuellement authentifié
         $user = $tokenStorage->getToken()->getUser();
         $userId = $user instanceof User ? $user->getId() : null;
         // Vérification que l'utilisateur est celui qui a posté
@@ -265,6 +297,7 @@ class AdsController extends AbstractController
             'photos' => $photos
         ]);
     }
+
     //Pour supprimer une photo (voir js deletephotos)
     #[Route('/delete-photo/{photoId}', name: 'app_delete_photo', methods: ['DELETE'])]
     public function deletePhoto(int $photoId, EntityManagerInterface $em)
@@ -303,4 +336,37 @@ class AdsController extends AbstractController
         return new JsonResponse(['message' => 'Annonce supprimée avec succès'], 200);
       
     }
+    //Chargement des 12 prochaines annonces (pagination pour limiter lenteur)
+    #[Route('/load-more-ads', name: 'load_more_ads', methods: ['GET'])]
+    public function loadMoreAds(Request $request, AdsRepository $adsRepository): JsonResponse
+    {
+        $offset = $request->query->getInt('offset', 0);
+        $limit = 12; // Limite de 12 annonces à retourner à chaque fois
+        $ads = $adsRepository->findBy([], null, $limit, $offset);
+        $adsArray = [];
+        foreach ($ads as $ad) {
+            $photos = [];
+            foreach ($ad->getPhotos() as $photo) {
+                $photos[] = $photo->getName();
+            }
+    
+            $adData = [
+                'id' => $ad->getId(),
+                'title' => $ad->getTitle(),
+                'city' => [
+                    'id' => $ad->getCity()->getId(),
+                    'name' => $ad->getCity()->getName()
+                ],
+                'type' => $ad->getType() ? $ad->getType()->getName() : null,
+                'status' => $ad->getStatus() ? $ad->getStatus()->getName() : null,
+                'transaction' => $ad->getTransaction() ? $ad->getTransaction()->getName() : null,
+                'price' => $ad->getPrice(),
+                'photos' => $photos,
+            ];
+            $adsArray[] = $adData;
+        }
+        
+        return new JsonResponse($adsArray);
+    }
+    
 }

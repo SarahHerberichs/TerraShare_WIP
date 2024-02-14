@@ -1,24 +1,22 @@
 document.addEventListener("DOMContentLoaded", function () {
   var deleteButtons = document.querySelectorAll(".btn-delete-ad");
-  //boucle dans les bouttons et récupère
+  //Boucle dans les bouttons et récupère l'id de l'Ad à supprimer (injecté dans data-ad-id ), puis la supprime
   deleteButtons.forEach(function (button) {
     button.addEventListener("click", function () {
-      //Récupération de l'id de l'Ad à supprimer (injecté dans data-ad-id dans page html)
       var adId = button.getAttribute("data-ad-id");
       deleteAd(adId);
     });
   });
 
-  // Suppression en ajax de la cible
+  // Function pour Suppression en ajax de la cible
   function deleteAd(adId) {
     //Instance de l'objet XMLHttpRequest
     var xhr = new XMLHttpRequest();
     //Ouverture de requete DELETE vers l'url dont la route est configurée pour la suppression, passe en parametre l'id de l'AD
     xhr.open("DELETE", "/my-ads/delete/" + adId, true);
     xhr.setRequestHeader("Content-Type", "application/json");
-    //quand la requete est treminée
+    //quand la requete est terminée
     xhr.onload = function () {
-      console.log(xhr.status);
       //Vérifie le statut de la réponse
       if (xhr.status === 200) {
         // Pour analyser la réponse

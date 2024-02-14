@@ -59,7 +59,7 @@
 // });
 
 document.addEventListener("DOMContentLoaded", function () {
-  // Récupérer la valeur de userLoggedIn depuis l'attribut data-*
+  // Récupération de la valeur de userLoggedIn depuis l'attribut data-*
   var userLoggedInElement = document.getElementById("userLoggedIn");
   var userLoggedIn = userLoggedInElement.dataset.loggedIn === "true";
 
@@ -67,20 +67,21 @@ document.addEventListener("DOMContentLoaded", function () {
   if (!userLoggedIn) {
     var errorMessageDiv = document.getElementById("errorMessage");
     errorMessageDiv.style.display = "block";
+    //Si l'utilisateur est loggé
   } else {
     var departmentsSelect = document.getElementById("departments");
     var citySearchInput = document.getElementById("citySearch");
     var citiesList = document.getElementById("citiesList");
 
     function updateCitiesList(departmentNumber, searchQuery = "") {
-      //Pour execution de requete asynchrone
+      //Création d'une requete AJAX asynchrone
       var xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function () {
         //Le statut est à 4 lorsquela requête est terminée
         if (xhr.readyState === 4) {
-          //le status est 200 si la requête a abouti
+          //Le status est 200 si la requête a abouti
           if (xhr.status === 200) {
-            //Parse la réponse JSON de la requete
+            //Analyse de la réponse JSON
             var citiesData = JSON.parse(xhr.responseText);
             citiesList.innerHTML = "";
             //Pour chaque city crée une div qui contiendra une span avec le city.name
@@ -93,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
               cityName.textContent = city.name + "-" + city.zipcode;
 
               cityContainer.appendChild(cityName);
-              //Fonction de redirection au click sur une ville
+              //Redirection au click sur une ville vers l'url pour créer une Ad
               cityContainer.addEventListener("click", function () {
                 window.location.href = "/create-ad/" + city.id;
               });

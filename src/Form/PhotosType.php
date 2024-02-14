@@ -19,10 +19,6 @@ class PhotosType extends AbstractType
                 'label'=> false,
                 
             ])
-//             ->add('ad', EntityType::class, [
-//                 'class' => Ads::class,
-// 'choice_label' => 'id',
-//             ])
         ;
     }
 

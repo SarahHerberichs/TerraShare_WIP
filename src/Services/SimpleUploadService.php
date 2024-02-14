@@ -15,7 +15,7 @@ class SimpleUploadService{
         $new_file_name =$original_file_name.'-'.uniqid().'.'.$file->guessExtension();
         //(voir yaml)
         $path_destination = $this->params->get('photos_directory');
-        //déplace et stocke
+        //Déplace et stocke
         $file->move(
             $path_destination,
             $new_file_name

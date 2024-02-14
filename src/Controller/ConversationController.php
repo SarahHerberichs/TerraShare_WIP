@@ -21,7 +21,7 @@ class ConversationController extends AbstractController
     ): Response
     {
         
-        //Recup l'utilisateur en cours
+        //Recup l'utilisateur actuellement authentifié
         $currentUser = $tokenStorage->getToken()->getUser();
        
         //Recup le message qui vient d'etre clické
