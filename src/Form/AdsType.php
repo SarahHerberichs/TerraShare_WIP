@@ -40,7 +40,8 @@ class AdsType extends AbstractType
                 'allow_add'=> true,
                 'allow_delete'=>true,
                 'by_reference'=>false,
-                'mapped'=>false
+                'mapped'=>false,
+                'label' =>false
             ])
             ->add('type', EntityType::class, [
                 'class' => Type::class,
@@ -69,9 +70,6 @@ class AdsType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Ads::class,
             'city' => null,
-            // 'csrf_field_name' => '_token',
-            // 'csrf_token_id'   => 'ad_item',
-            // 'csrf_protection' => true
         ]);
     }
 }

@@ -2,7 +2,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Conversation pour l'annonce :</h1>
+    <h2>Conversation pour l'annonce :</h2>
     <h3>{{conversation.ad.title}}</h3>
       
     {% for message in messages|reverse %}

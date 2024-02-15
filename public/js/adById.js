@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var popupImageContainer = document.getElementById("popupImageContainer");
   var nextArrow = document.getElementById("nextArrow");
   var currentIndex = 0;
+  var errorMsg = document.getElementById("errorMessage");
 
   // Initialisation popup
   popup.style.display = "none";
@@ -32,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function openPopup(index) {
+    errorMsg.style.zIndex = "-100";
     currentIndex = index;
     //crée une img avec une classe
     var popupImage = document.createElement("img");
@@ -61,6 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
     closePopup();
   });
   function closePopup() {
+    errorMsg.style.zIndex = "100";
     popup.style.display = "none";
     popupImageContainer.innerHTML = "";
   }

@@ -80,10 +80,7 @@ class AdsController extends AbstractController
           TokenStorageInterface $tokenStorage,
           SimpleUploadService $simpleUploadService,
           ImageCompressionService $imageCompressionService,
-          CsrfTokenManagerInterface $csrfTokenManager
-          ): Response
-        
-    {
+    ): Response {
           
         $user = $tokenStorage->getToken()->getUser();
 

@@ -7,18 +7,16 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Créer une Annonce à :{{ city.name }}</h1>
+    <h2>Créer une Annonce à :{{ city.name }}</h2>
 
     {{ form_start(form) }}
-        {# {{form_row(form._token)}} #}
         <input type="hidden" name="token" value="{{ csrf_token('ad_token') }}">
         {{ form_row(form.title) }}
         {{ form_row(form.text) }}
         {{ form_row (form.type) }}
         {{ form_row (form.transaction) }}
         {{ form_row (form.status) }}
-        <div class="invisible">
-        {{ form_row(form.city) }}</div>
+        <div class="invisible"> {{ form_row(form.city) }}</div>
         <div class="price-input">
             {{ form_row (form.price)}}
         </div>

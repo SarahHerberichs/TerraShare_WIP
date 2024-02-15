@@ -1,12 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Messagerie</h1>
+    <h2>Messagerie</h2>
 
    {% for message in messages|reverse %}
     <div class="received-message">
         <div class="message-id-{{ message.id }}">
+        {% if message.sender is not null %}
             <p>Message de {{ message.sender.pseudo }} pour l'annonce : 
+            {% else %}
+             <p> Message de //Utilisateur Supprimé // pour l'annonce : 
+             {% endif %}
             {% if message.ad is not null %}
             <b>{{ message.ad.title }}</b>
             {% else %}

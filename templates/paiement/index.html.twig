@@ -1,28 +1,10 @@
-{# {% extends 'base.html.twig' %}
-
-{% block title %}Choix Paiement{% endblock %}
-
-
-{% block body %}
-<div class="donnation"> 
-<h3>Donnation </h3>
-    <label for="sum">Somme choisie:</label>
-    <input type="number" id="sum" name="sum" min="1" />
-    <button id="payButton" data-url="{{ path('app_paiement-stripe') }}">Payer</button>
-</div>
-    {# <button><a href="https://buy.stripe.com/aEU3eqgX5dds30kaEE">10€</a></button> #}
-{# {% endblock %}
-
-{% block javascripts %}
-    <script src= "{{asset('js/stripe.js')}}"></script>
-{% endblock %} #} 
 {% extends 'base.html.twig' %}
 
 {% block title %}Choix Paiement{% endblock %}
 
 {% block body %}
 <div class="donnation"> 
-    <h3>Donnation </h3>
+    <h2>Donnation </h2>
     <form action="{{ path('app_paiement-stripe') }}" method="post">
         <label for="sum">Somme choisie:</label>
         <input type="number" id="sum" name="sum" min="1" />

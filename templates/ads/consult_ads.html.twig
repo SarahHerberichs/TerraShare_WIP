@@ -3,11 +3,11 @@
 {% block title %}Toutes les annonces{% endblock %}
 
 {% block body %}
-    <h1>Toutes les annonces</h1>
+    <h2>Toutes les annonces</h2>
 
     <!-- Formulaire de filtres -->
     <form method="get" class="form-filter-ads">
-    <input type="hidden" name="token" value="{{ csrf_token('filter_ad_token') }}">
+        <input type="hidden" name="token" value="{{ csrf_token('filter_ad_token') }}">
         {# Filtre par département #}
         <div class="form-element block-department">
             <label for="department">Filtrer par département :</label>
@@ -77,8 +77,10 @@
                 <a href="{{ path('app_consult_ad_by_id', {'id': ad.id}) }}" class="each-ad">
                     <div class="text-content">
                         <h3>{{ ad.title }}</h3> 
-                        <p class='created-ad'> crée le {{ ad.createdAt|date('d/m/Y H:i:s') }}</p>
-                        <p class='city-name'> à {{ ad.city.name|capitalize }}</p>
+                        <p> crée par {{ ad.user.pseudo }} </p>
+                            <p class='created-ad'> le {{ ad.createdAt|date('d/m/Y') }} à  {{ ad.createdAt|date('H:i:s') }}</p>
+                            <p class='city-name'> à {{ ad.city.name|capitalize }}</p>
+                        
                         {% if ad.type is not null %}
                             <p class="type"> Type : {{ ad.type.name }} </p>
                         {% endif %}

@@ -1,16 +1,21 @@
 <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
-    <div class="container-fluid">
-        <div class="title-and-logo">
-            <a class="navbar-brand" href="/">TerraShare</a>
+
+    <main class="container-fluid">
+
+        <header class="title-and-logo">
+            <h1><a class="navbar-brand" href="/">TerraShare</a></h1>
             <img src="{{ asset('/img/TerraShare_Logo_Vert.png') }}" class='main-logo' alt="logo">
-        </div>
+        </header>
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02"
             aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarColor02">
+
+        <section class="collapse navbar-collapse" id="navbarColor02">
+
             <ul class="navbar-nav me-auto">
-                  <li class="nav-item">
+                <li class="nav-item">
                     <a class="nav-link" href="{{path('app_home')}}">Accueil</a>
                 </li>
                 <li class="nav-item">
@@ -21,25 +26,29 @@
                 </li>
                 <li><button><a class="nav-link" href="{{path('app_donation')}}">Faire un Don</a></button></li>
             </ul>
+
             <form class="d-flex nav-btns">
                 {% if app.user %}
-                <a href="{{path('my_ads',{'userId': app.user.id})}}" class="btn btn-info">Mes Annonces</a>
 
-                <div class='navbar-btn-message'> 
-                    <a href="{{ path('my_messages') }}" class="btn btn-secondary my-messages-btn">Mes Messages<span id="unread-messages-count" data-route="{{ path('get_unread_messages_count') }}">0</span></a>
-                </div>
-                <a href="/logout" class="btn btn-danger">Deconnexion</a>
+                    <a href="{{path('my_ads',{'userId': app.user.id})}}" class="btn btn-info">Mes Annonces</a>
+                    <div class='navbar-btn-message'> 
+                        <a href="{{ path('my_messages') }}" class="btn btn-secondary my-messages-btn">Mes Messages<span id="unread-messages-count" data-route="{{ path('get_unread_messages_count') }}">0</span></a>
+                    </div>
+                    <a href="/logout" class="btn btn-danger">Deconnexion</a>
+                    <a href="/profile" class="btn btn-primary"> Profile </a>
 
                     {% if is_granted('ROLE_ADMIN') %}
                         <a href="/admin" class="btn btn-info mx-3">Dashboard</a>
                     {% endif %}
+
                 {% else %}
-                <a href="/register" class="btn btn-warning mx-3">Inscription</a>
-                <a href="/login" class="btn btn-info mx-3">Login</a>
+                    <a href="/register" class="btn btn-warning mx-3">Inscription</a>
+                    <a href="/login" class="btn btn-info mx-3">Login</a>
                 {% endif %}
+
             </form>
-        </div>
-    </div>
+        </section>
+    </main>
 </nav>
 
 {% block javascripts %}

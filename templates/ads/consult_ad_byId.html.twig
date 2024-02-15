@@ -7,9 +7,9 @@
     <h3>{{ ad.title }} à {{ ad.city.name }}</h3> 
      <p>{{ ad.text }}</p> 
      {% if ad.price %} 
-     <p>Prix : {{ ad.price }} € </p>
+        <p>Prix : {{ ad.price }} € </p>
      {% else %}
-     <p>Prix : Non Renseigné</p>
+        <p>Prix : Non Renseigné</p>
      {% endif %}
     
     <div id="imageContainer" class="img-container by-id">
@@ -23,12 +23,13 @@
         <div id="nextArrow" class="arrow" onclick='nextImage()'>&gt;</div>
     </div>
     {% if app.user %}
-        <button class='send-message btn btn-secondary '><a href="{{ path('app_sendMessage', {'adId': ad.id }) }}"> Contactez l'annonceur<a/></button>
+        <a href="{{ path('app_sendMessage', {'adId': ad.id }) }}" class='send-message btn btn-secondary'> Contactez l'annonceur<a/>
     {% else %}
-          <div id="errorMessage" class="alert alert-danger">
-                Veuillez vous connecter pour contacter l'utilisateur.
-            </div>
-       <button> <a href= "/login" >login </a> </button>
+        <div id="errorMessage" class="alert alert-danger"> 
+            <p>Veuillez vous connecter pour contacter l'utilisateur.</p>
+            <a href="/login" class="btn btn-info mx-3">Login</a>
+        </div>
+        
     {% endif %}
 {% endblock %}
 
