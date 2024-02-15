@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\Services\MessageNotificationService;
 
 class MessageController extends AbstractController
 {
@@ -47,6 +48,7 @@ class MessageController extends AbstractController
         AdsRepository $adsRepository,
         MessageRepository $messageRepository,
         ConversationRepository $conversationRepository,
+        MessageNotificationService $messageNotificationService
     ): Response {
             //Le sender est l'utilisateur actuellement authentifié
             $sender = $tokenStorage->getToken()->getUser();
@@ -84,6 +86,7 @@ class MessageController extends AbstractController
                 $message->setReceiver($receiver);
                 $message->setAd($ad);
                 $message->setIsRead(false);
+                $messageNotificationService->sendNewMessageNotification($receiver,$message);
                 $em->persist($message);
                 $em->flush();
     
@@ -106,6 +109,7 @@ class MessageController extends AbstractController
                     $em->persist($message);
                     $em->flush();
                 }
+                
                 $this->addFlash('success', 'Votre message a été envoyé avec succès!');
                 return $this->redirectToRoute('app_home');
             }     

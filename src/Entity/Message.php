@@ -24,12 +24,14 @@ class Message
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'messages')]
+    #[ORM\JoinColumn(name: 'sender_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     private ?User $sender = null;
 
     #[ORM\ManyToOne(inversedBy: 'messages')]
     private ?User $receiver = null;
 
     #[ORM\ManyToOne(inversedBy: 'messages')]
+    #[ORM\JoinColumn(name: 'ad_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     private ?Ads $Ad = null;
 
     #[ORM\Column]
@@ -37,6 +39,7 @@ class Message
 
     #[ORM\ManyToOne(inversedBy: 'message')]
     private ?Conversation $conversation = null;
+
 
     public function __construct() {
         $this->created_at = new \DateTimeImmutable();

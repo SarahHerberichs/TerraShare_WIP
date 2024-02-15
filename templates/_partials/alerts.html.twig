@@ -16,3 +16,10 @@
         </div>
     {% endfor %}
 {% endfor %}
+
+{% if csrf_error_message is defined %}
+    <div class="alert alert-danger alert-dismissible fade show p-3 w-50 mx-auto mt-3" role="alert">
+        <strong class="alert-message">{{ csrf_error_message }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endif %}

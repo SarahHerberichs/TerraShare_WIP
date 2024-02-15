@@ -7,7 +7,7 @@
 
 {% block body %}
     {{ form_start(form) }}
-        {{form_row(form._token)}}
+        <input type="hidden" name="token" value="{{ csrf_token('edit_ad_token') }}">
         {{ form_row(form.title) }}
         {{ form_row(form.text) }}
          <div class="list-existing-photos">

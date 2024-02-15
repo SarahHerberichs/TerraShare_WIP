@@ -2,8 +2,6 @@
 
 namespace App\Form;
 
-
-
 use App\Entity\Ads;
 use App\Entity\Type;
 use App\Entity\Cities;
@@ -28,7 +26,6 @@ class AdsType extends AbstractType
         $builder
             ->add('title', TextType::class)
             ->add('text', TextareaType::class)
-            // Ajoutez l'option city pour lier l'annonce à la ville
             
             ->add('city', EntityType::class, [
                 'class' => Cities::class,
@@ -72,6 +69,9 @@ class AdsType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Ads::class,
             'city' => null,
+            // 'csrf_field_name' => '_token',
+            // 'csrf_token_id'   => 'ad_item',
+            // 'csrf_protection' => true
         ]);
     }
 }

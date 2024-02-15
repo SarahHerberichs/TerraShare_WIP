@@ -22,29 +22,57 @@ class ConversationController extends AbstractController
     {
         
         //Recup l'utilisateur actuellement authentifié
-        $currentUser = $tokenStorage->getToken()->getUser();
+    //     $currentUser = $tokenStorage->getToken()->getUser();
        
-        //Recup le message qui vient d'etre clické
-        $message = $messageRepository->find($messageId);
-        //Recup les deux utilisateurs qui communiquent
-        $receiver = $message->getReceiver();
-        $sender = $message->getSender();
+    //     //Recup le message qui vient d'etre clické
+    //     $message = $messageRepository->find($messageId);
+    //     //Recup les deux utilisateurs qui communiquent
+    //     $receiver = $message->getReceiver();
+    //     $sender = $message->getSender();
         
-        //Si l'un des deux est l'utilisateur en cours , recherche la conversation 
-        if ($currentUser === $sender || $currentUser === $receiver) {
-        $ad = $message->getAd();
-        $conversation = $conversationRepository->findConversationByUsersAndAd ($currentUser,$sender,$ad);
+    //     //Si l'un des deux est l'utilisateur en cours , recherche la conversation 
+    //     if ($currentUser === $sender || $currentUser === $receiver) {
+    //     $ad = $message->getAd();
+    //     $conversation = $conversationRepository->findConversationByUsersAndAd ($currentUser,$sender,$ad);
          
-        if($conversation) {
-            $messages=$conversation->getMessage();
+    //         if($conversation) {
+    //             $messages=$conversation->getMessage();
 
-            return $this->render('messages/show_conversation.html.twig', [
-                'conversation' => $conversation,
-                'messages' => $messages,
-                'ad'=>$ad
-            ]);
-        }
-        }
+    //             return $this->render('messages/show_conversation.html.twig', [
+    //                 'conversation' => $conversation,
+    //                 'messages' => $messages,
+    //                 'ad'=>$ad
+    //             ]);
+    //         }
+    //     }
 
+    // }
+    // Récupérer l'utilisateur actuellement authentifié
+    $currentUser = $tokenStorage->getToken()->getUser();
+        
+    // Récupérer le message qui vient d'être cliqué
+    $message = $messageRepository->find($messageId);
+
+    // Vérifier si le message existe et si l'annonce associée n'est pas null
+    if (!$message || $message->getAd() === null) {
+        // Gérer le cas où le message ou l'annonce associée est null
+        // Rediriger l'utilisateur vers une page d'erreur ou une autre action
+        // Par exemple :
+        return $this->redirectToRoute('error_page');
     }
-}
+
+    // Récupérer l'identifiant de la conversation depuis le message
+    $conversation = $message->getConversation();
+
+    if($conversation) {
+       $messages=$conversation->getMessage();
+    
+        return $this->render('messages/show_conversation.html.twig', [
+         'conversation' => $conversation,
+         'messages' => $messages,
+        // 'ad'=>$ad
+        ]);
+    };
+    
+    }
+};

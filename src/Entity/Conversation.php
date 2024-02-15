@@ -15,18 +15,37 @@ class Conversation
     #[ORM\Column]
     private ?int $id = null;
 
+    // #[ORM\ManyToOne(targetEntity: Ads::class, inversedBy: 'conversations')]
+    // // #[ORM\JoinColumn(name: 'ad_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    // #[ORM\JoinColumn(name: 'ad_id', referencedColumnName: 'id')]
+    // private ?Ads $ad = null;
+    
     #[ORM\ManyToOne(inversedBy: 'Message')]
+    #[ORM\JoinColumn(name: 'ad_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     private ?Ads $ad = null;
 
     #[ORM\OneToMany(mappedBy: 'conversation', targetEntity: Message::class)]
+
     private Collection $message;
 
-    #[ORM\ManyToOne(inversedBy: 'User1')]
-    private ?User $user1 = null;
+    // #[ORM\ManyToOne(inversedBy: 'User1')]
+    // #[ORM\JoinColumn(name: 'user1_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    // private ?User $user1 = null;
 
-    #[ORM\ManyToOne(inversedBy: 'User2')]
-    private ?User $user2 = null;
+    // #[ORM\ManyToOne(inversedBy: 'User2')]
+    // #[ORM\JoinColumn(name: 'user2_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    // private ?User $user2 = null;
+     #[ORM\ManyToOne(targetEntity:User::class, inversedBy: "conversations1")]
+     #[ORM\JoinColumn(name: "user1_id", referencedColumnName: "id", onDelete: "SET NULL")]
+    
+   private ?User $user1 = null;
 
+   
+    #[ORM\ManyToOne(targetEntity:User::class, inversedBy: "conversations2")]
+    #[ORM\JoinColumn(name: "user2_id", referencedColumnName: "id", onDelete: "SET NULL")]
+   
+   private ?User $user2 = null;
+   
     public function __construct()
     {
         $this->message = new ArrayCollection();

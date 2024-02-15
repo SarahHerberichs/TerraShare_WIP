@@ -27,31 +27,45 @@ class DonationController extends AbstractController
 
     #[Route('/paiement-stripe', name: 'app_paiement-stripe')]
     public function PaiementStripe(Request $request, UrlGeneratorInterface $urlGenerator): Response
-    {
-        $sum = $request->query->get('sum');
+{
+    if ($request->isMethod('POST')) {
+        // Récupérez le token CSRF envoyé avec la requête
+        $token = $request->request->get('token');
 
-        Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
+        // Vérifiez si le token CSRF est valide
+        if ($this->isCsrfTokenValid('donation_token', $token)) {
+            $sum = $request->request->get('sum');
 
-        $checkout_session = Session::create([
-            'customer_email' => $this->getUser()->getUserIdentifier(),
-            'payment_method_types' => ['card'],
-            'line_items' => [[
-                'price_data' => [
-                    'currency' => 'eur',
-                    'unit_amount' => $sum * 100,
-                    'product_data' => [
-                        'name' => 'Paiement TerraShare', // Nom de votre produit
+            Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
+
+            $checkout_session = Session::create([
+                'customer_email' => $this->getUser()->getUserIdentifier(),
+                'payment_method_types' => ['card'],
+                'line_items' => [[
+                    'price_data' => [
+                        'currency' => 'eur',
+                        'unit_amount' => $sum * 100,
+                        'product_data' => [
+                            'name' => 'Paiement TerraShare', // Nom de votre produit
+                        ],
                     ],
-                ],
-                'quantity' => 1,
-            ]],
-            'mode' => 'payment',
-            'success_url' => $urlGenerator->generate('app_paiement_success_stripe', [], UrlGeneratorInterface::ABSOLUTE_URL),
-            'cancel_url' => $urlGenerator->generate('app_paiement_erreur_stripe', [], UrlGeneratorInterface::ABSOLUTE_URL)
-        ]);
+                    'quantity' => 1,
+                ]],
+                'mode' => 'payment',
+                'success_url' => $urlGenerator->generate('app_paiement_success_stripe', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                'cancel_url' => $urlGenerator->generate('app_paiement_erreur_stripe', [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ]);
 
-        return new RedirectResponse($checkout_session->url);
+            return new RedirectResponse($checkout_session->url);
+        } else {
+            $this->addFlash('error', 'Jeton invalide');
+            return $this->redirectToRoute('app_donation');
+        }
+    } else {
+        // Redirigez vers la page de don si la méthode de la requête n'est pas POST
+        return $this->redirectToRoute('app_donation');
     }
+}
 
     #[Route('/commande/success-stripe', name: 'app_paiement_success_stripe')]
     public function stripeSuccessPaiement(): Response

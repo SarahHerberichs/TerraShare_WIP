@@ -7,6 +7,7 @@
 
     <!-- Formulaire de filtres -->
     <form method="get" class="form-filter-ads">
+    <input type="hidden" name="token" value="{{ csrf_token('filter_ad_token') }}">
         {# Filtre par département #}
         <div class="form-element block-department">
             <label for="department">Filtrer par département :</label>

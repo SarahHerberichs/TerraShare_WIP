@@ -29,6 +29,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 
 class AdsController extends AbstractController
@@ -77,13 +79,14 @@ class AdsController extends AbstractController
           EntityManagerInterface $em,
           TokenStorageInterface $tokenStorage,
           SimpleUploadService $simpleUploadService,
-          ImageCompressionService $imageCompressionService
+          ImageCompressionService $imageCompressionService,
+          CsrfTokenManagerInterface $csrfTokenManager
           ): Response
         
     {
-        
+          
         $user = $tokenStorage->getToken()->getUser();
-        
+
         $city = $citiesRepository->find($cityId);
        
         if (!$city) {
@@ -97,42 +100,50 @@ class AdsController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $photos = $request->files->all();
-           
-            if (!empty($photos)){
-               
-                $images = $photos['ads']['photos'];
-                foreach($images as $image){
-                    $new_photos = new Photos();
-                    $image_name = $image['name'];
-                    //taille image loadée
-                    $imageSizeKb = (($image['name']->getSize()))/1024;
-                    //Défini une taille max d'image
-                    $maxImageSizeKb = 100;
-                    //upload de l'image
-                    $new_photo = $simpleUploadService->uploadImage($image_name);
-                    //Si taille max dépassée, défini un taux de compression à passer au service compression
-                    if ($imageSizeKb > $maxImageSizeKb ) {
-                        //Recherche le taux de compression à appliquer, et le passe au compresseur(compresse et redimensionne)
-                        $compressTaux =($maxImageSizeKb * 100)/$imageSizeKb;
-               
-                        $imageCompressionService->compressImage($compressTaux,$new_photo);
-                        $new_photos->setName("compress_".$new_photo);
-                    }
-                    $ad->addPhoto($new_photos);
-                     
-                    $ad->setCity($form->get('city')->getData());
+            // Récupération du jeton CSRF envoyé avec la requête
+           $token = $request->getPayload()->get('token');
+            //Si le token n'est pas valide...
+           if (!$this->isCsrfTokenValid('ad_token', $token)) {
+            $this->addFlash('error','Token invalide');
+            //Si le token est valide
+            } else {
+                $photos = $request->files->all();
+                
+                if (!empty($photos)){
                     
+                    $images = $photos['ads']['photos'];
+                   
+                    foreach($images as $image){
+                        $new_photos = new Photos();
+                        $image_name = $image['name'];
+                       
+                        //taille image loadée
+                        $imageSizeKb = (($image['name']->getSize()))/1024;
+                        //Défini une taille max d'image
+                        $maxImageSizeKb = 100;
+                        //upload de l'image
+                        $new_photo = $simpleUploadService->uploadImage($image_name);
+                        //Si taille max dépassée, défini un taux de compression à passer au service compression
+                        if ($imageSizeKb > $maxImageSizeKb ) {
+                            //Recherche le taux de compression à appliquer, et le passe au compresseur(compresse et redimensionne)
+                            $compressTaux =($maxImageSizeKb * 100)/$imageSizeKb;
+                
+                            $imageCompressionService->compressImage($compressTaux,$new_photo);
+                            $new_photos->setName("compress_".$new_photo);
+                        }
+                        $ad->addPhoto($new_photos);
+                        
+                        $ad->setCity($form->get('city')->getData());
+                    }
                     $em->persist($ad);
                     $em->flush();
             
                     return $this->redirectToRoute('app_home');
+
+                } else{
+                    $errorMessage = 'Postez au moins une photo SVP';
                 }
-       
-            } else{
-                $errorMessage = 'Postez au moins une photo SVP';
             }
-     
         }
 
         //Affichage du formulaire dans le template
@@ -152,6 +163,7 @@ class AdsController extends AbstractController
         TransactionRepository $transactionRepository,
         StatusRepository $statusRepository
     ): Response {
+
         $selectedDepartment = $request->query->get('department', null);
         $selectedType = $request->query->get('type', null);
         $selectedStatus = $request->query->get('status', null);
@@ -272,24 +284,32 @@ class AdsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $photos = $request->files->all();
-           
-            //Seulement s'il y a eu un changement dans les photos
-            if ($photos != []) {
-                $images = $photos['ads']['photos'];
-                foreach($images as $image){
-                    $new_photos = new Photos();
-                    $image_name = $image['name'];
-                    $new_photo = $simpleUploadService->uploadImage($image_name);
-                    $new_photos->setName($new_photo);
-                    $ad->addPhoto($new_photos);
+            // Récupération du jeton CSRF envoyé avec la requête
+           $token = $request->getPayload()->get('token');
+            //Si le token n'est pas valide...
+           if (!$this->isCsrfTokenValid('edit_ad_token', $token)) {
+            $this->addFlash('error','Token invalide');
+            //Si le token est valide
+            } else {
+                $photos = $request->files->all();
+            
+                //Seulement s'il y a eu un changement dans les photos
+                if ($photos != []) {
+                    $images = $photos['ads']['photos'];
+                    foreach($images as $image){
+                        $new_photos = new Photos();
+                        $image_name = $image['name'];
+                        $new_photo = $simpleUploadService->uploadImage($image_name);
+                        $new_photos->setName($new_photo);
+                        $ad->addPhoto($new_photos);
+                    }
                 }
-            }
 
-            $em->flush();
-            $em->persist($ad);
-            return $this->redirectToRoute('my_ads', ['userId' => $userId]);
+                $em->flush();
+                $em->persist($ad);
+           
+                return $this->redirectToRoute('my_ads', ['userId' => $userId]);
+            }
         }
 
         return $this->render('ads/edit_ad.html.twig', [
@@ -336,7 +356,7 @@ class AdsController extends AbstractController
         return new JsonResponse(['message' => 'Annonce supprimée avec succès'], 200);
       
     }
-    //Chargement des 12 prochaines annonces (pagination pour limiter lenteur)
+    //Chargement des 12 prochaines annonces (pagination pour limiter lenteur )
     #[Route('/load-more-ads', name: 'load_more_ads', methods: ['GET'])]
     public function loadMoreAds(Request $request, AdsRepository $adsRepository): JsonResponse
     {

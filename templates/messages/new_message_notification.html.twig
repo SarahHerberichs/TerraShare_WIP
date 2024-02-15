@@ -1,0 +1,13 @@
+{# templates/emails/new_message_notification.html.twig #}
+{% block subject %}Nouveau message reçu{% endblock %}
+
+{% block body %}
+    <p>Bonjour {{ user.pseudo}},</p>
+
+    <p>Vous avez reçu un nouveau message sur notre plateforme.</p>
+    <h3>Sujet: {{ sujet }} </h3>
+    <p> Message : {{ message }}</p>
+    <p>Cordialement,</p>
+    <p>L'équipe de Terra Share</p>
+    
+{% endblock %}
