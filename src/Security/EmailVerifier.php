@@ -21,8 +21,10 @@ class EmailVerifier
 
     public function sendEmailConfirmation(string $verifyEmailRouteName, UserInterface $user, TemplatedEmail $email): void
     {
+       
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,
+           
             $user->getId(),
             $user->getEmail()
         );
@@ -42,8 +44,9 @@ class EmailVerifier
      */
     public function handleEmailConfirmation(Request $request, UserInterface $user): void
     {
+  
         $this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), $user->getId(), $user->getEmail());
-
+        
         $user->setIsVerified(true);
 
         $this->entityManager->persist($user);
