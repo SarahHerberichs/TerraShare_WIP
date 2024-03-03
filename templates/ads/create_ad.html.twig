@@ -11,8 +11,8 @@
 
     {{ form_start(form) }}
         <input type="hidden" name="token" value="{{ csrf_token('ad_token') }}">
-        {{ form_row(form.title) }}
-        {{ form_row(form.text) }}
+        {{ form_row (form.title) }}
+        {{ form_row (form.text) }}
         {{ form_row (form.type) }}
         {{ form_row (form.transaction) }}
         {{ form_row (form.status) }}
@@ -21,7 +21,7 @@
             {{ form_row (form.price)}}
         </div>
        
-        <p>Poster au moins une photo</p>
+        <p>Merci de poster au moins une photo</p>
         <button type = "button" class="btn btn-success btn-ajouter" data-collection="#photos">Ajouter une image</button>
        <div id="photos" 
         data-index= "{{form.photos|length > 0 ? form.photos|last.vars.name + 1 : 0}}"
@@ -30,7 +30,7 @@
         </div>
         <p class='error'> {{ errorMessage }} <p>
         
-        <button type="submit">Créer l'annonce</button>
+        <button type="submit" class="btn btn-primary bg-dark btn-send-message">Créer l'annonce</button>
 
     {{ form_end(form) }}
 

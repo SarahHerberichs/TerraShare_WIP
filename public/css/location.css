@@ -1,7 +1,7 @@
 .city-item {
-  border: 1px solid #ccc;
   padding: 10px;
-  margin: 5px;
+  margin: auto;
+  width: 20em;
   cursor: pointer;
   transition: background-color 0.3s;
 }

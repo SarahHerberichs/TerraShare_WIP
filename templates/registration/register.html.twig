@@ -8,7 +8,7 @@
     {% endfor %}
 
     <h2>Register</h2>
-
+    <div class="registration-form">
     {{ form_errors(registrationForm) }}
 
     {{ form_start(registrationForm) }}
@@ -20,6 +20,7 @@
         {{ form_row(registrationForm.agreeTerms) }}
  
 
-        <button type="submit" class="btn">Register</button>
+        <button type="submit" class="btn bg-dark">Register</button>
     {{ form_end(registrationForm) }}
+    </div>
 {% endblock %}

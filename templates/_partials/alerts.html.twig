@@ -1,10 +1,21 @@
 {% for label, messages in app.flashes %}
 
     {% for message in messages %}
-    <div class="alert alert-{{label}} alert-dismissible fade show p-3 w-50 mx-auto mt-3" role="alert">
+    {# <div class="alert alert-{{label}} alert-dismissible fade show p-3 w-50 mx-auto mt-3" role="alert">
         <strong class="alert-message">{{message|raw}}</strong>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+    </div> #}
+       {% if label == 'error' %}
+            <div class="alert alert-danger alert-error alert-dismissible fade show p-3 w-50 mx-auto mt-3" role="alert">
+                <strong class="alert-message">{{ message|raw }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% else %}
+            <div class="alert alert-{{ label }} alert-dismissible fade show p-3 w-50 mx-auto mt-3" role="alert">
+                <strong class="alert-message">{{ message|raw }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
     {% endfor %}
 
 {% endfor %}

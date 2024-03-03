@@ -26,7 +26,7 @@
                 </p>
                 <p class='message-read' {% if not message.isRead %} style="display: none;" {% endif %}>Message lu <i class="fas fa-check-circle" style="color: green;"></i></p>
                 {% if not message.isRead %}<button class="mark-as-read" data-message-id="{{ message.id }}">Marquer comme lu</button> {% endif %}
-                    <button class='btn-send-message btn btn-info'><a href="{{ path('app_sendMessage', {'adId': message.ad.id, 'messageId': message.id}) }}">Répondre</a></button>
+                   <a href="{{ path('app_sendMessage', {'adId': message.ad.id, 'messageId': message.id}) }}" class="btn btn-primary bg-dark">Répondre</a>
             {% endif %}
         </div>
 

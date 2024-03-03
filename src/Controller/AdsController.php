@@ -187,7 +187,7 @@ class AdsController extends AbstractController
     
         // Pagination
         $currentPage = $request->query->getInt('page', 1);
-        $perPage = 3;
+        $perPage = 9;
         $totalItems = count($ads);
         $totalPages = ceil($totalItems / $perPage);
         $offset = ($currentPage - 1) * $perPage;

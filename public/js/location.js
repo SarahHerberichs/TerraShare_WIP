@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
     //Si l'utilisateur est loggé
   } else {
     var departmentsSelect = document.getElementById("departments");
-    var citySearchInput = document.getElementById("citySearch");
+    var citySearchInput = document.getElementById("city-search");
     var citiesList = document.getElementById("citiesList");
 
     function updateCitiesList(departmentNumber, searchQuery = "") {

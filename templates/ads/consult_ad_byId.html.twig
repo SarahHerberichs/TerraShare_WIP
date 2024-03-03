@@ -23,7 +23,7 @@
         <div id="nextArrow" class="arrow" onclick='nextImage()'>&gt;</div>
     </div>
     {% if app.user %}
-        <a href="{{ path('app_sendMessage', {'adId': ad.id }) }}" class='send-message btn btn-secondary'> Contactez l'annonceur<a/>
+   <a href="{{ path('app_sendMessage', {'adId': ad.id }) }}" class="btn btn-primary bg-dark btn-send-message"> Contactez l'annonceur<a/>
     {% else %}
         <div id="errorMessage" class="alert alert-danger"> 
             <p>Veuillez vous connecter pour contacter l'utilisateur.</p>

@@ -36,6 +36,12 @@ class ProfileType extends AbstractType
                 ]),
             ],
         ])
+        ->add('currentPassword', PasswordType::class, [
+            'mapped' => false,
+            'constraints' => [
+                new NotBlank(['message' => 'Veuillez entrer votre mot de passe actuel']),
+            ],
+        ])
             ->add('plainPassword', RepeatedType::class,[
                 'type'=>PasswordType::class,
                 'invalid_message'=> 'Les mots de pass ne correspondent pas.',
@@ -50,6 +56,7 @@ class ProfileType extends AbstractType
                     ]),
                 ],
             ]);
+       
     }
 
     public function configureOptions(OptionsResolver $resolver): void

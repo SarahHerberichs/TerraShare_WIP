@@ -32,7 +32,6 @@
             </p>
     {# emplacement pour le full text#}
             <p class="full-text">{{ message.text }}</p>
-            <h2> {{ message.conversation.id }} </h2>
             <button class="btn btn-reduce-text" style="display:none;"><i class="fa-sharp fa-solid fa-angles-up"></i></button>  
             {% if message.receiver == app.user %}
                 <p class='message-not-read' {% if message.isRead %} style="display: none;" {% endif %}>
@@ -48,9 +47,9 @@
                     <a href="{{ path('app_sendMessage', {'adId': message.ad.id, 'messageId': message.id}) }}">Répondre</a></button>
                 {% endif %}
             {% endif %}
-            <button class="view-conversation btn btn-secondary">
-                <a href="{{ path('app_show_conversation', { 'messageId': message.id}) }}">Voir la conversation</a>
-            </button>
+            {# <button class="view-conversation btn btn-secondary"> #}
+                <a href="{{ path('app_show_conversation', { 'messageId': message.id}) }}" class="btn btn-secondary my-messages-btn">Voir la conversation</a>
+            {# </button> #}
         </div>
        
     </div>

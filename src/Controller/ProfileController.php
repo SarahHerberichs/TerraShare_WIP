@@ -16,25 +16,50 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class ProfileController extends AbstractController
 {
     #[Route('/profile', name: 'app_profile')]
-    public function profile(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $em): Response
-    {
+    // public function profile(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $em): Response
+    // {
        
-        $form= $this->createForm(ProfileType::class,$this->getUser());
-        $form->handleRequest($request);
+    //     $form= $this->createForm(ProfileType::class,$this->getUser());
+    //     $form->handleRequest($request);
+        
+    //     if($form->isSubmitted()&& $form->isValid()){
+    //         $user = $form->getData();
+    //         $plainPassword = $form->get('plainPassword')->getData();
 
-        if($form->isSubmitted()&& $form->isValid()){
-            $user = $form->getData();
-            $plainPassword = $form->get('plainPassword')->getData();
+    //         if (null !== $plainPassword){
+    //             $user->setPassword($passwordHasher->hashPassword($user,$plainPassword));
+    //         }
+    //         $em->flush();
+    //         $this->addFlash('success', 'Votre profil à été mis à jour');
+    //     }
 
-            if (null !== $plainPassword){
-                $user->setPassword($passwordHasher->hashPassword($user,$plainPassword));
+    //     return $this->render('profile/index.html.twig', [
+    //         'form' =>$form->createView()
+    //     ]);
+    // }
+    public function profile(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $em): Response
+{
+    $form = $this->createForm(ProfileType::class, $this->getUser());
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $user = $form->getData();
+        $plainPassword = $form->get('plainPassword')->getData();
+        $currentPassword = $form->get('currentPassword')->getData();
+
+        if ($passwordHasher->isPasswordValid($user, $currentPassword)) {
+            if (null !== $plainPassword) {
+                $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
             }
             $em->flush();
-            $this->addFlash('success', 'Votre profil à été mis à jour');
+            $this->addFlash('success', 'Votre profil a été mis à jour');
+        } else {
+            $this->addFlash('error','Mot de passe actuel incorrect');
         }
-
-        return $this->render('profile/index.html.twig', [
-            'form' =>$form->createView()
-        ]);
     }
+
+    return $this->render('profile/index.html.twig', [
+        'form' => $form->createView()
+    ]);
+}
 }

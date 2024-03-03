@@ -32,6 +32,11 @@ h2:before {
   background-color: #000; /* Couleur du soulignement */
   animation: underline 0.5s ease forwards; /* Utilisation de l'animation avec keyframes */
 }
+.main-container {
+  width: 90vw;
+  text-align: center;
+  margin: auto;
+}
 
 /* Définition des keyframes pour l'animation */
 @keyframes underline {
@@ -51,7 +56,7 @@ h2:before {
   text-align: center;
   margin-right: 7em;
 }
-.navbar-btn-message span {
+.my-messages-btn span {
   background-color: blue;
   color: wheat;
   padding: 1em;
@@ -60,16 +65,32 @@ h2:before {
 .my-messages-btn {
   background-color: rgb(223, 180, 99);
 }
+.mes-annonces-btn {
+  background-color: rgb(87, 189, 87);
+}
 .nav-btns {
   display: flex;
   flex-direction: column;
 }
 .nav-btns a {
   margin-top: 1em !important;
+  margin-right: 1em;
   width: 50%;
 }
+.fa-user {
+  font-size: 1.5em;
+}
+.btn-user:hover {
+  color: rgb(213, 232, 208);
+  background-color: transparent;
+}
+
 .title-and-logo a {
   margin-right: 0 !important;
+}
+form {
+  width: 80%;
+  margin: auto;
 }
 .post-ad-main {
   text-align: center;
@@ -84,11 +105,12 @@ h2:before {
   margin: auto;
 }
 .list-ads {
-  width: 80vw;
+  width: 90%;
   list-style-type: none;
   margin: 0;
   padding: 0;
   margin: auto;
+  justify-content: center;
 }
 .list-ads a {
   text-decoration: none;
@@ -152,7 +174,7 @@ h2:before {
   overflow: hidden;
 }
 .price-input {
-  width: 20%;
+  width: 15em;
 }
 .img-ad {
   width: 10em;
@@ -164,11 +186,12 @@ h2:before {
   max-height: 50%;
 }
 .each-user-ad {
-  border: 1px solid blue;
   width: 80%;
   margin: auto;
   text-align: center;
-  background-color: rgba(1, 1, 1, 0.2);
+  border: 1px solid black;
+  border-radius: 1em;
+  margin-bottom: 1em;
 }
 .buttons-dl-up .btn-delete-ad,
 .buttons-dl-up .btn-success {
@@ -181,7 +204,6 @@ h2:before {
   text-align: center;
 }
 .list-existing-photos {
-  border: 1px solid red;
   text-align: center;
 }
 .existing-photo {
@@ -189,12 +211,10 @@ h2:before {
   flex-direction: column;
   align-items: center;
   margin: auto;
-  border: 1px solid blue;
+
   width: 70%;
 }
-.btn-add-photo {
-  border: 1px solid blue;
-}
+
 .buttons-edit-ad {
   display: flex;
   flex-direction: column;
@@ -203,6 +223,15 @@ h2:before {
 }
 .buttons-edit-ad button {
   margin-top: 1em;
+}
+
+.registration-form div {
+  width: 80%;
+  margin: auto;
+}
+.registration-form button {
+  border: 1px solid black;
+  color: wheat;
 }
 .login-form {
   display: flex;
@@ -230,23 +259,27 @@ h2:before {
   text-decoration: none;
 }
 .each-message-conv {
-  border: 1px solid black;
+  width: 50%;
+  margin: auto;
+  margin-bottom: 1em;
 }
 .btn-reduce-text {
   width: 100%;
 }
-
+#message_text {
+  height: 10em;
+}
 .received-message {
   background-color: #f0f0f0;
+  margin: auto;
 }
 .sent-message {
   background-color: #add8e6;
-  border: 1px solid #add8e6;
 }
 .btn-send-message {
-  display: block;
-  margin: auto;
+  margin-top: 1em;
 }
+
 #popup {
   display: flex;
   flex-direction: row;
@@ -288,17 +321,27 @@ h2:before {
 @media screen and (min-width: 992px) {
   .nav-btns {
     flex-direction: row;
+    justify-content: flex-end;
   }
   .nav-btns a {
     margin-top: auto;
     width: auto;
   }
+
+  form {
+    width: 50%;
+  }
   .department-choice,
   .city-choice {
     display: flex;
-    width: 50vw;
+    width: 50%;
     flex-direction: column;
     justify-content: space-between;
+  }
+  #departments,
+  #city-search {
+    width: 20em;
+    margin: auto;
   }
   .login-form {
     display: flex;
@@ -321,10 +364,11 @@ h2:before {
   .list-ads {
     display: flex;
     flex-wrap: wrap;
-    width: 80vw;
     list-style-type: none;
     margin: 0;
     padding: 0;
+    width: 90%;
+    margin: auto;
   }
 
   .each-ad {
@@ -336,7 +380,6 @@ h2:before {
     margin-right: 10px;
   }
   .each-user-ad {
-    border: 1px solid blue;
     width: 50%;
   }
   .text-content {
@@ -355,6 +398,9 @@ h2:before {
     grid-row: span 3; /* Occupe trois lignes */
   }
   .form-filter-ads {
+    width: 50%;
+  }
+  .registration-form div {
     width: 50%;
   }
 }
