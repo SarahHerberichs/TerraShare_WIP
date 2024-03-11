@@ -3,23 +3,114 @@
 {% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
-<h2>HOME PAGE</h2>
+<h2>Bienvenue sur TerraShare</h2>
 
-<p>Ici je vais raconter à quoi sert ce site </p>
-Que ce soit pour de l'habitation longue courte ou moyenne durée
-<ul>
-    <li>Je possède un terrain et je souhaite le mettre à disposition pour de la location, de la vente , des vacances ou weekend</li>
-    <li>Je cherche un terrain pour le louer, l'acheter ou y passer un ou plusieurs jours de détente</li>
-</ul>
+<p class="intro-text">Vous recherchez un espace partagé où la nature est à l'honneur, que ce soit pour concrétiser vos projets 
+ou simplement pour passer un moment agréable ? </p>
+<p class="highlight"> Vous êtes au bon endroit !</p>
+<section >
+    <p>Notre plateforme met en relation des personnes autour d'un intérêt commun : <span class="bold-text">la nature et le partage</span>.</p>
+    <p>Que vous souhaitiez louer, acheter, réaliser des travaux, passer un weekend au vert, ou même découvrir de nouveaux
+    horizons lors de visites insolites comme celle d'une ferme, nous avons ce qu'il vous faut.</p>
 
-Que ce soit pour des petits travaux ou pour organiser un évenement
-<ul>
-    <li>Je possède un terrain et j'ai besoin de monde pour intervenir </li>
-    <li>Je cherche a offrir mes compétences sur un lieu de vie d'habitat alternatif contre salaire, logement ou autre monaie d'échange</li>
-</ul>
-    Celà permet également d'organiser des visites des lieux succeptible d'intéresser le public 
+    <p>Ici, vous trouverez des annonces variées, allant de la <span class="bold-text">cohabitation</span> dans des habitats partagés 
+    à des <span class="bold-text">services sur mesure</span>, en passant par des offres de <span class="bold-text">vacances atypiques</span>. 
+    Vous pourrez ainsi trouver l'endroit idéal pour concrétiser vos projets ou passer des moments inoubliables en
+    communion avec la nature.</p>
+</section>
+<section class= 'home-examples'>
+    <div>
+    <img src="../../public/img/van.png"/>
+        <p>Vous cherchez un endroit où planter <span class="bold-text">votre tente ou garer votre camping-car?</span> </p>
+        <p class="example-response">Nous vous mettrons en 
+        relation avec des propriétaires prêts à vous accueillir sur leur domaine.</p>
+    </div>
 
+    <div>
+        <p>Vous avez envie de venir faire des <span class="bold-text">travaux contre hébergement </span>?</p>
+        <p class="example-response"> Notre plateforme vous permettra de trouver des 
+        propriétaires prêts à vous accueillir en échange de vos compétences. 
+        Vous pourrez ainsi bénéficier d'un hébergement tout en contribuant à l'amélioration d'un lieu.</p>
+    </div>
+    <div>
+        <p>Si vous souhaitez <span class="bold-text">acheter ou louer un bout de terrain </span> pour y vivre en harmonie avec la nature,</p>
+        <p class="example-response">Vous trouverez sur notre site une sélection d'annonces correspondant à vos critères. </p>
+    </div>
 
+    <div>
+        <p>Que vous recherchiez un petit coin de verdure pour installer votre habitat écologique ou un terrain plus vaste 
+        pour développer un projet d'autosuffisance,</p>
+        <p class="example-response"> Nous sommes là pour vous aider à trouver le lieu parfait.
+        </p>
+    </div>
 
-Ce site évoluera en fonction des besoins 
+    <div>
+        <p> Vous avez une idée de <span class="bold-text">projet à monter avec d'autres personnes</span>, qu'il s'agisse d'un<span class="bold-text"> jardin partagé, 
+        d'un écovillage ou d'une coopérative d'habitat ? </span>
+        </p>
+        <p class="example-response">Notre communauté dynamique et engagée vous offre la possibilité de rencontrer des partenaires potentiels et 
+        de concrétiser ensemble vos aspirations.
+        </p>
+    </div>
+    <div>
+        <p>
+        Si vous avez besoin de <span class="bold-text">matériel </span>pour votre terrain, que ce soit un tracteur pour entretenir vos cultures,
+        des outils comme des pelles pour vos travaux de jardinage, de la paille pour l'aménagement de vos espaces,
+        ou même des moutons pour entretenir naturellement votre terrain,</p>
+        <p class="example-response"> notre plateforme est là pour vous aider à trouver
+        ce dont vous avez besoin.
+        </p>
+    </div>
+        
+    <p>Sur TerraShare, vous pourrez consulter des annonces proposant du matériel agricole, des outils de jardinage, 
+    des matériaux de construction écologiques, ainsi que des animaux et des services associés. 
+    Que vous cherchiez à acheter, à louer ou même à échanger du matériel, notre communauté vous offre une multitude
+    d'options pour répondre à vos besoins spécifiques.</p>
+
+    <p>De plus, si vous disposez de matériel que vous n'utilisez plus ou que vous souhaitez partager, vous pouvez également 
+    publier des annonces pour le mettre à disposition d'autres membres de la communauté. C'est ça, la magie du partage
+    sur <span class="terra-text">TerraShare</span>.</p>
+    <br>
+    <p><span class="bold-text">Quels que soient vos besoins et vos envies, notre communauté est là pour vous aider à trouver l'espace parfait.</span></p>
+    <p>Rejoignez-nous dès maintenant et faites de nouvelles rencontres autour de votre passion pour la nature et 
+    le partage d'habitat !</p>
+
+</section>
+<section> 
+    <h4 class='bg-dark text-light'>Les dernières annonces </h4>
+
+        <ul class= "list-ads">
+            {% for ad in ads|slice(0, 12) %}
+                <a href="{{ path('app_consult_ad_by_id', {'id': ad.id}) }}" class="each-ad">
+                    <div class="text-content">
+                        <h3>{{ ad.title }}</h3> 
+                        <p> crée par {{ ad.user.pseudo }} </p>
+                            <p class='created-ad'> le {{ ad.createdAt|date('d/m/Y') }} à  {{ ad.createdAt|date('H:i:s') }}</p>
+                            <p class='city-name'> à {{ ad.city.name|capitalize }}</p>
+                        
+                        {% if ad.type is not null %}
+                            <p class="type"> Type : {{ ad.type.name }} </p>
+                        {% endif %}
+                        {% if ad.status is not null %}
+                            <p class="status"> Status : {{ ad.status.name }} </p>
+                        {% endif %}
+                        {% if ad.transaction is not null %}
+                            <p class="transaction"> Transaction : {{ ad.transaction.name }}</p>
+                        {% endif %}
+                        {% if ad.price is not null %}
+                            <p class="price">Prix : {{ ad.price }} €</p>
+                        {% endif %}
+                    </div>
+                    {% for photo in ad.photos %}
+                        {% if loop.first %}
+                            <div class="img-container img-list">
+                                <img src="{{ asset('img/' ~ photo.name)}}" alt="" class="main-img-ad img-list card-img-top mt-3">   
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </a>
+            {% endfor %}
+        </ul>
+        <a href ="{{ path('app_consult_ads') }}" class="btn btn-primary bg-dark">Toutes les annonces </a>
+    </section> 
 {% endblock %}

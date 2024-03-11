@@ -18,9 +18,14 @@ h2 {
   text-decoration: none;
   color: #000; /* Couleur du texte */
 }
+
 .invisible {
   display: none;
 }
+h4 {
+  padding: 1em;
+}
+
 /*Ajout d'un pseudo-élément pour créer l'effet de soulignement */
 h2:before {
   content: "";
@@ -31,6 +36,9 @@ h2:before {
   left: 0;
   background-color: #000; /* Couleur du soulignement */
   animation: underline 0.5s ease forwards; /* Utilisation de l'animation avec keyframes */
+}
+.bold-text {
+  font-weight: bold;
 }
 .main-container {
   width: 90vw;
@@ -49,6 +57,36 @@ h2:before {
   width: 3em;
   margin-right: 1em;
 }
+.terra-text {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #064606;
+}
+/* Home Page*/
+.intro-text {
+  font-size: 1.2em; /* Taille de police plus grande */
+  font-weight: bold; /* Texte en gras */
+  color: #333; /* Couleur du texte */
+}
+
+.highlight {
+  color: #006600; /* Couleur de mise en surbrillance */
+}
+.home-examples::before {
+  content: "";
+  display: block;
+  border-top: 1px solid #ccc; /* Trait de séparation */
+  margin-top: 20px; /* Marge supérieure pour l'espace */
+  margin-bottom: 20px; /* Marge inférieure pour l'espace */
+}
+.example-response {
+  font-style: italic; /* Texte en italique */
+  color: #064606; /* Couleur du texte */
+  background-color: #f4f4f4; /* Couleur de fond */
+  padding: 10px; /* Espacement intérieur */
+  border-radius: 5px; /* Bord arrondi */
+}
+/**/
 .title-and-logo {
   display: flex;
   flex-direction: column;
@@ -125,7 +163,7 @@ form {
   gap: 10px;
   width: 100%;
   padding: 1em;
-  margin-top: 1em;
+  margin: 1em;
   border: 1px solid black;
   background-color: rgba(35, 35, 74, 0.2);
   border-radius: 2em;
