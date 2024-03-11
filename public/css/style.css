@@ -211,7 +211,6 @@ form {
   flex-direction: column;
   align-items: center;
   margin: auto;
-
   width: 70%;
 }
 
@@ -224,7 +223,13 @@ form {
 .buttons-edit-ad button {
   margin-top: 1em;
 }
-
+.btn-add-photo,
+.btn-delete-photo,
+.btn-update-ad {
+  width: 12em;
+  margin: auto;
+  margin-bottom: 1em;
+}
 .registration-form div {
   width: 80%;
   margin: auto;
@@ -259,7 +264,7 @@ form {
   text-decoration: none;
 }
 .each-message-conv {
-  width: 50%;
+  width: 80vw;
   margin: auto;
   margin-bottom: 1em;
 }
@@ -271,7 +276,6 @@ form {
 }
 .received-message {
   background-color: #f0f0f0;
-  margin: auto;
 }
 .sent-message {
   background-color: #add8e6;
@@ -402,5 +406,8 @@ form {
   }
   .registration-form div {
     width: 50%;
+  }
+  .each-message-conv {
+    width: 60vw;
   }
 }

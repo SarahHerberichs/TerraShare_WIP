@@ -22,7 +22,7 @@
         </div>
        
         <p>Merci de poster au moins une photo</p>
-        <button type = "button" class="btn btn-success btn-ajouter" data-collection="#photos">Ajouter une image</button>
+        <button type = "button" class="btn btn-success btn-add-photo" data-collection="#photos">Ajouter une image</button>
        <div id="photos" 
         data-index= "{{form.photos|length > 0 ? form.photos|last.vars.name + 1 : 0}}"
         data-prototype= "{{form_widget(form.photos.vars.prototype)|e('html_attr')}}"
@@ -30,7 +30,7 @@
         </div>
         <p class='error'> {{ errorMessage }} <p>
         
-        <button type="submit" class="btn btn-primary bg-dark btn-send-message">Créer l'annonce</button>
+        <button type="submit" class="btn btn-primary bg-dark btn-add-ad">Créer l'annonce</button>
 
     {{ form_end(form) }}
 

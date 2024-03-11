@@ -13,8 +13,8 @@ const addFormToCollection = (e) => {
   );
   //Création d'un btn de suppression
   let btnSupprimer = document.createElement("button");
-  btnSupprimer.className = "btn btn-info mt-3 btn-supprimer";
-  btnSupprimer.id = "btn-supprimer";
+  btnSupprimer.className = "btn btn-info mt-3 btn-delete-photo";
+  btnSupprimer.id = "btn-delete-photo";
   btnSupprimer.innerHTML = "supprimer l'image";
   //Ajout du btn comme enfant de item
   item.appendChild(btnSupprimer);
@@ -23,7 +23,7 @@ const addFormToCollection = (e) => {
   //Incrémente l'index de la collection pour suivre nb d'elements ajoutés
   collectionPhoto.dataset.index++;
   document
-    .querySelectorAll(".btn-supprimer")
+    .querySelectorAll(".btn-delete-photo")
     .forEach((btn) =>
       btn.addEventListener("click", (e) =>
         e.currentTarget.parentElement.remove()
@@ -33,6 +33,6 @@ const addFormToCollection = (e) => {
 //Si chargement complet du DOM, pour chaque btn ajouter, au click, appel à la fonction ci dessus
 document.addEventListener("DOMContentLoaded", function () {
   document
-    .querySelectorAll(".btn-ajouter")
+    .querySelectorAll(".btn-add-photo")
     .forEach((btn) => btn.addEventListener("click", addFormToCollection));
 });

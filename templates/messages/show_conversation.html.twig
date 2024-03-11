@@ -16,19 +16,26 @@
                 <p>Envoyé le : {{ message.createdAt|date('d/m/Y à H:i') }}</p>
             </div>
             {% else %}
-            <div class="sent-message">
-                <p>Message de {{ message.sender.pseudo }} </p>
-                <p>Objet : {{ message.title }}</p>
-                <p>Message : {{ message.text }}</p>
-                <p>Envoyé le : {{ message.createdAt|date('d/m/Y à H:i') }}</p>
-                <p class='message-not-read' {% if message.isRead %} style="display: none;" {% endif %}>
-                Message Non Lu <i class="far fa-envelope" style="color: red;"></i>
-                </p>
-                <p class='message-read' {% if not message.isRead %} style="display: none;" {% endif %}>Message lu <i class="fas fa-check-circle" style="color: green;"></i></p>
-                {% if not message.isRead %}<button class="mark-as-read" data-message-id="{{ message.id }}">Marquer comme lu</button> {% endif %}
-                   <a href="{{ path('app_sendMessage', {'adId': message.ad.id, 'messageId': message.id}) }}" class="btn btn-primary bg-dark">Répondre</a>
+                <div class="sent-message">
+                {% if message.sender %}
+                    <p>Message de {{ message.sender.pseudo }} </p>
+                 {% else %}
+                    <p> Utilisateur supprimé </p>
+                 {% endif %}
+                    <p>Objet : {{ message.title }}</p>
+                    <p>Message : {{ message.text }}</p>
+                    <p>Envoyé le : {{ message.createdAt|date('d/m/Y à H:i') }}</p>
+                    <p class='message-not-read' {% if message.isRead %} style="display: none;" {% endif %}>
+                    Message Non Lu <i class="far fa-envelope" style="color: red;"></i>
+                    </p>
+                    <p class='message-read' {% if not message.isRead %} style="display: none;" {% endif %}>Message lu <i class="fas fa-check-circle" style="color: green;"></i></p>
+                    {% if not message.isRead %}<button class="mark-as-read" data-message-id="{{ message.id }}">Marquer comme lu</button> {% endif %}
+                    {% if message.sender %}
+                        <a href="{{ path('app_sendMessage', {'adId': message.ad.id, 'messageId': message.id}) }}" class="btn btn-primary bg-dark btn-repondre">Répondre</a>
+                    {% endif %}
+                 </div>
             {% endif %}
-        </div>
+       
 
     {% endfor %}
 {% endblock %}
