@@ -1,7 +1,7 @@
-Réalisation Perso réalisé en Symfony et JS + CSS & Bootstrap.
+Réalisation Perso - Réalisé en Symfony et JS + CSS & Bootstrap.
 
 Site de mise en relation, petites annonces.
-La relation entre les utilisateur tourne autour d’un LIEU. 
+La relation entre les utilisateurs tourne autour d’un LIEU. 
 
 Il peut s’agir d’un lieu que les personnes souhaitent Acheter ou Louer ou Partager et ce pour une durée déterminée ou indéterminée.
 Il peut donc s’agir de vacances, d’hébergement contre services, de lieu pour poser une tente, d'un bout de terrain à aménager ou déjà habitable...
@@ -17,10 +17,10 @@ L’utilisateur connecté à son compte peut Consulter des annonces, y répondre
 
 Le dashboard de l’administrateur lui permet l’administration de l’ensemble des données (Annonces, Utilisateurs , photos…).
 
-Les password sont hashés et les formulaires sont protégés par des tokens.
+Les passwords sont hashés et les formulaires sont protégés par des tokens.
 
-La liste des villes et départements ont été injecté dans la BDD à partir d’un fichier JSON (ImportDepartmentsCommand).
-Les images uploadés sont immédiatement compressées (ImageCompressionService) afin d’alléger au maximum la BDD.
+La liste des villes et départements ont été injectés dans la BDD à partir d’un fichier JSON (ImportDepartmentsCommand).
+Les images uploadées sont immédiatement compressées (ImageCompressionService) afin d’alléger au maximum la BDD.
 
 L'optimisation du code HTML en terme de référencement et de choix de balises adaptées n'a pas encore été géré.
 
