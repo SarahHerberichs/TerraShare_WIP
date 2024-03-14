@@ -55,9 +55,7 @@ class ConversationController extends AbstractController
 
     // Vérifier si le message existe et si l'annonce associée n'est pas null
     if (!$message || $message->getAd() === null) {
-        // Gérer le cas où le message ou l'annonce associée est null
-        // Rediriger l'utilisateur vers une page d'erreur ou une autre action
-        // Par exemple :
+
         return $this->redirectToRoute('error_page');
     }
 
@@ -70,7 +68,6 @@ class ConversationController extends AbstractController
         return $this->render('messages/show_conversation.html.twig', [
          'conversation' => $conversation,
          'messages' => $messages,
-        // 'ad'=>$ad
         ]);
     };
     

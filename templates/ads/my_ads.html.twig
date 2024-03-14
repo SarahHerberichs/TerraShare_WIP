@@ -15,15 +15,15 @@
          
             {% for photo in ad.photos %}
           
-            <div class="img-container img-list">
-                <img src="{{ asset('img/' ~ photo.name)}}" alt="" class="img-ad img-list card-img-top mt-3">   
-            </div>
+                <div class="img-container img-list">
+                    <img src="{{ asset('img/' ~ photo.name)}}" alt="" class="img-ad img-list card-img-top mt-3">   
+                </div>
             {% endfor %}
             {% if ad.id is defined %}
-            <div class="buttons-dl-up">
-            <button class="btn btn-success"><a href="{{ path('app_ad_edit', {'adId': ad.id}) }}">Modifier l'annonce</a></button>
-                <button type="button" class="btn btn-danger btn-delete-ad" data-ad-id="{{ ad.id }}">Supprimer l'annonce</button>
-            </div>
+                <div class="buttons-dl-up">
+                <button class="btn btn-success"><a href="{{ path('app_ad_edit', {'adId': ad.id}) }}">Modifier l'annonce</a></button>
+                    <button type="button" class="btn btn-danger btn-delete-ad" data-ad-id="{{ ad.id }}">Supprimer l'annonce</button>
+                </div>
             {% endif %}    
         </div>     
         {% endfor %}

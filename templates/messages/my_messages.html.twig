@@ -6,17 +6,17 @@
    {% for message in messages|reverse %}
     <div class="received-message">
         <div class="message-id-{{ message.id }}">
-        {% if message.sender is not null %}
-            <p>Message de {{ message.sender.pseudo }} pour l'annonce : 
+            {% if message.sender is not null %}
+                <p>Message de {{ message.sender.pseudo }} pour l'annonce : </p>
             {% else %}
-             <p> Message de //Utilisateur Supprimé // pour l'annonce : 
-             {% endif %}
-            {% if message.ad is not null %}
-            <b>{{ message.ad.title }}</b>
-            {% else %}
-            <b><i>L'annonce a été supprimée</i></b>
+                <p> Message de //Utilisateur Supprimé // pour l'annonce : </p>
             {% endif %}
-            </p>
+            {% if message.ad is not null %}
+                <b>{{ message.ad.title }}</b>
+            {% else %}
+                <b><i>L'annonce a été supprimée</i></b>
+            {% endif %}
+                
             <p>Objet : {{ message.title }}</p>
             <p>Envoyé le : {{ message.createdAt|date('d/m/Y à H:i') }}</p>
             {# paragraphe qui limite le texte initial, si il est trop grand, lien pour agrandir et bouton pr reduire#}
@@ -30,7 +30,7 @@
                 {% endif %}
                 
             </p>
-    {# emplacement pour le full text#}
+            {# emplacement pour le full text#}
             <p class="full-text">{{ message.text }}</p>
             <button class="btn btn-reduce-text" style="display:none;"><i class="fa-sharp fa-solid fa-angles-up"></i></button>  
             {% if message.receiver == app.user %}

@@ -99,12 +99,12 @@ class MessageController extends AbstractController
                     $em->persist($conversation);
                     $em->flush();
             
-                    // Attribuer la conversation au message maintenant que la conversation a un ID
+                    // Attribue la conversation au message maintenant que la conversation a un ID
                     $message->setConversation($conversation);
                     $em->persist($message);
                     $em->flush();
                 } else {
-                    // Si la conversation existe déjà, attribuer la conversation existante au message
+                    // Si la conversation existe déjà, attribue la conversation existante au message
                     $message->setConversation($existingConversation);
                     $em->persist($message);
                     $em->flush();

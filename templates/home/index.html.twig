@@ -77,40 +77,40 @@ ou simplement pour passer un moment agréable ? </p>
 
 </section>
 <section> 
-    <h4 class='bg-dark text-light'>Les dernières annonces </h4>
+<h4 class='bg-dark text-light'>Les dernières annonces </h4>
 
-        <ul class= "list-ads">
-            {% for ad in ads|slice(0, 12) %}
-                <a href="{{ path('app_consult_ad_by_id', {'id': ad.id}) }}" class="each-ad">
-                    <div class="text-content">
-                        <h3>{{ ad.title }}</h3> 
-                        <p> crée par {{ ad.user.pseudo }} </p>
-                            <p class='created-ad'> le {{ ad.createdAt|date('d/m/Y') }} à  {{ ad.createdAt|date('H:i:s') }}</p>
-                            <p class='city-name'> à {{ ad.city.name|capitalize }}</p>
+    <ul class= "list-ads">
+        {% for ad in ads|slice(0, 12) %}
+            <a href="{{ path('app_consult_ad_by_id', {'id': ad.id}) }}" class="each-ad">
+                <div class="text-content">
+                    <h3>{{ ad.title }}</h3> 
+                    <p> crée par {{ ad.user.pseudo }} </p>
+                    <p class='created-ad'> le {{ ad.createdAt|date('d/m/Y') }} à  {{ ad.createdAt|date('H:i:s') }}</p>
+                    <p class='city-name'> à {{ ad.city.name|capitalize }}</p>
                         
-                        {% if ad.type is not null %}
-                            <p class="type"> Type : {{ ad.type.name }} </p>
-                        {% endif %}
-                        {% if ad.status is not null %}
-                            <p class="status"> Status : {{ ad.status.name }} </p>
-                        {% endif %}
-                        {% if ad.transaction is not null %}
-                            <p class="transaction"> Transaction : {{ ad.transaction.name }}</p>
-                        {% endif %}
-                        {% if ad.price is not null %}
-                            <p class="price">Prix : {{ ad.price }} €</p>
-                        {% endif %}
-                    </div>
-                    {% for photo in ad.photos %}
-                        {% if loop.first %}
-                            <div class="img-container img-list">
-                                <img src="{{ asset('img/' ~ photo.name)}}" alt="" class="main-img-ad img-list card-img-top mt-3">   
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                </a>
-            {% endfor %}
-        </ul>
-        <a href ="{{ path('app_consult_ads') }}" class="btn btn-primary bg-dark">Toutes les annonces </a>
-    </section> 
+                    {% if ad.type is not null %}
+                        <p class="type"> Type : {{ ad.type.name }} </p>
+                    {% endif %}
+                    {% if ad.status is not null %}
+                        <p class="status"> Status : {{ ad.status.name }} </p>
+                    {% endif %}
+                    {% if ad.transaction is not null %}
+                        <p class="transaction"> Transaction : {{ ad.transaction.name }}</p>
+                    {% endif %}
+                    {% if ad.price is not null %}
+                        <p class="price">Prix : {{ ad.price }} €</p>
+                    {% endif %}
+                </div>
+                {% for photo in ad.photos %}
+                    {% if loop.first %}
+                        <div class="img-container img-list">
+                            <img src="{{ asset('img/' ~ photo.name)}}" alt="" class="main-img-ad img-list card-img-top mt-3">   
+                         </div>
+                    {% endif %}
+                {% endfor %}
+            </a>
+        {% endfor %}
+    </ul>
+    <a href ="{{ path('app_consult_ads') }}" class="btn btn-primary bg-dark">Toutes les annonces </a>
+</section> 
 {% endblock %}

@@ -29,7 +29,7 @@ class DonationController extends AbstractController
     public function PaiementStripe(Request $request, UrlGeneratorInterface $urlGenerator): Response
 {
     if ($request->isMethod('POST')) {
-        // Récupérez le token CSRF envoyé avec la requête
+        // Récuperation du token CSRF envoyé avec la requête
         $token = $request->request->get('token');
 
         // Vérifiez si le token CSRF est valide
@@ -46,7 +46,7 @@ class DonationController extends AbstractController
                         'currency' => 'eur',
                         'unit_amount' => $sum * 100,
                         'product_data' => [
-                            'name' => 'Paiement TerraShare', // Nom de votre produit
+                            'name' => 'Paiement TerraShare',
                         ],
                     ],
                     'quantity' => 1,

@@ -22,7 +22,7 @@ class ImportDepartmentsCommand extends Command
 
     public function __construct(EntityManagerInterface $entityManager)
     {
-        ini_set('memory_limit', '1024M'); // Augmentez la limite à 1 Go (ajustez selon vos besoins)
+        ini_set('memory_limit', '1024M'); //Limit max
 
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -57,7 +57,7 @@ class ImportDepartmentsCommand extends Command
             foreach ($citiesData as $cityData) {
                 $departmentNumber = $cityData['department_number'];
 
-                // Ajouter le département uniquement s'il n'existe pas déjà
+                // Ajout du département s'il existe pas déjà
                 if (!isset($departments[$departmentNumber])) {
                     $department = new Departments();
                     $department->setName($cityData['department_name']);
@@ -65,7 +65,7 @@ class ImportDepartmentsCommand extends Command
 
                     $this->entityManager->persist($department);
 
-                    // Marquer le département comme ajouté
+                    // Marque le dpt comme ajouté
                     $departments[$departmentNumber] = true;
                 }
             }

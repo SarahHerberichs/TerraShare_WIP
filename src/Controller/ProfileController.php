@@ -16,27 +16,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class ProfileController extends AbstractController
 {
     #[Route('/profile', name: 'app_profile')]
-    // public function profile(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $em): Response
-    // {
-       
-    //     $form= $this->createForm(ProfileType::class,$this->getUser());
-    //     $form->handleRequest($request);
-        
-    //     if($form->isSubmitted()&& $form->isValid()){
-    //         $user = $form->getData();
-    //         $plainPassword = $form->get('plainPassword')->getData();
 
-    //         if (null !== $plainPassword){
-    //             $user->setPassword($passwordHasher->hashPassword($user,$plainPassword));
-    //         }
-    //         $em->flush();
-    //         $this->addFlash('success', 'Votre profil à été mis à jour');
-    //     }
-
-    //     return $this->render('profile/index.html.twig', [
-    //         'form' =>$form->createView()
-    //     ]);
-    // }
     public function profile(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $em): Response
 {
     $form = $this->createForm(ProfileType::class, $this->getUser());
