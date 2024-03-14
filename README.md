@@ -1,4 +1,4 @@
-Réalisation Perso réalisé en Symfony et JS. 
+Réalisation Perso réalisé en Symfony et JS + CSS & Bootstrap.
 
 Site de mise en relation, petites annonces.
 La relation entre les utilisateur tourne autour d’un LIEU. 
@@ -13,10 +13,15 @@ J’ai également ajouté catégorie « matériel » pour permettre l’échan
 
 L’utilisateur peut Consulter des annonces et faire un don via STRIPE.
 
-L’utilisateur connecté à son compte peut Consulter des annonces, y répondre et accéder aux conversations avec son interlocuteur.Il peut modifier son profil.
+L’utilisateur connecté à son compte peut Consulter des annonces, y répondre et accéder aux conversations avec son interlocuteur, marquer comme lu ses messages et répondre à l'expéditeur.Il peut poster des annonces avec des photos et modifier ses annonces.Il peut aussi modifier son profil.
 
 Le dashboard de l’administrateur lui permet l’administration de l’ensemble des données (Annonces, Utilisateurs , photos…).
 
+Les password sont hashés et les formulaires sont protégés par des tokens.
+
 La liste des villes et départements ont été injecté dans la BDD à partir d’un fichier JSON (ImportDepartmentsCommand).
 Les images uploadés sont immédiatement compressées (ImageCompressionService) afin d’alléger au maximum la BDD.
+
+L'optimisation du code HTML en terme de référencement et de choix de balises adaptées n'a pas encore été géré.
+
 
