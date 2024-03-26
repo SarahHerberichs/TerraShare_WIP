@@ -36,6 +36,7 @@
     {{ form_end(form) }}
 
 {% block javascripts %}
+{{ parent() }}
     <script src= "{{asset('js/photos.js')}}"></script>
     <script src= "{{asset('js/deletephotos.js')}}"></script>
 {% endblock %}

@@ -48,7 +48,11 @@
                 {% endif %}
             {% endif %}
             {# <button class="view-conversation btn btn-secondary"> #}
+            {% if message.ad is not null %}
                 <a href="{{ path('app_show_conversation', { 'messageId': message.id}) }}" class="btn btn-secondary my-messages-btn">Voir la conversation</a>
+           {% else %}
+           <p> l'annonce a été supprimée' <p>
+           {% endif %}
             {# </button> #}
         </div>
        
@@ -58,7 +62,7 @@
 {% endblock %}
 
 {% block javascripts %}
-
+{{ parent() }}
     <script src="{{ asset('js/markAsRead.js') }}"></script>
     <script src="https://kit.fontawesome.com/f924bf4e1d.js" crossorigin="anonymous"></script>
     <script src = "{{ asset('js/seeMore.js' )}}"></script>

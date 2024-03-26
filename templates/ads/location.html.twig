@@ -2,6 +2,7 @@
 
 {# templates/ads/index.html.twig #}
 {% block javascripts %}
+{{ parent() }}
     <script src= "{{asset('js/location.js')}}"></script>
 {% endblock %}
 

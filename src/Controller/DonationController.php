@@ -39,7 +39,7 @@ class DonationController extends AbstractController
             Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
 
             $checkout_session = Session::create([
-                'customer_email' => $this->getUser()->getUserIdentifier(),
+                // 'customer_email' => $this->getUser()->getUserIdentifier(),
                 'payment_method_types' => ['card'],
                 'line_items' => [[
                     'price_data' => [
