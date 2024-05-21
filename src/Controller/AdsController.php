@@ -80,10 +80,10 @@ class AdsController extends AbstractController
           TokenStorageInterface $tokenStorage,
           SimpleUploadService $simpleUploadService,
           ImageCompressionService $imageCompressionService,
+          AdsRepository $adsRepository,
     ): Response {
           
         $user = $tokenStorage->getToken()->getUser();
-
         $city = $citiesRepository->find($cityId);
        
         if (!$city) {
@@ -104,41 +104,50 @@ class AdsController extends AbstractController
             $this->addFlash('error','Token invalide');
             //Si le token est valide
             } else {
-                $photos = $request->files->all();
-                
-                if (!empty($photos)){
-                    
-                    $images = $photos['ads']['photos'];
-                   
+                $files = $request->files->all();
+                $images = $files['ads']['photos'];
+                $maxFileSizeKo = 5000;
+                $minFileSizeForCompressionKo = 500;
+                //si pas de photos loadée...
+                if (empty($files)){
+                    $errorMessage = 'Postez au moins une photo SVP';
+                } else{
                     foreach($images as $image){
                         $new_photos = new Photos();
                         $image_name = $image['name'];
-                       
-                        //taille image loadée
-                        $imageSizeKb = (($image['name']->getSize()))/1024;
-                        //Défini une taille max d'image
-                        $maxImageSizeKb = 100;
-                        //upload de l'image
-                        $new_photo = $simpleUploadService->uploadImage($image_name);
-                        //Si taille max dépassée, défini un taux de compression à passer au service compression
-                        if ($imageSizeKb > $maxImageSizeKb ) {
-                            //Recherche le taux de compression à appliquer, et le passe au compresseur(compresse et redimensionne)
-                            $compressTaux =($maxImageSizeKb * 100)/$imageSizeKb;
-                
-                            $imageCompressionService->compressImage($compressTaux,$new_photo);
-                            $new_photos->setName("compress_".$new_photo);
-                        }
-                        $ad->addPhoto($new_photos);
+                        $image_original_name = $image_name->getClientOriginalName();
                         
+                        // Vérifier si le nom de fichier contient une extension valide
+                        $extension = strtolower(pathinfo($image_original_name, PATHINFO_EXTENSION));
+                        //Si mauvaise extension...
+                        if (!in_array($extension, ['jpg', 'jpeg', 'png'])) {
+                         $this->addFlash('error','Extension non prise en charge (jpg, jpeg, png sont autorisés)');  
+                         return $this->redirectToRoute('create_ad',['cityId'=>$cityId]); 
+                        } else {
+                            $imageSizeKo = (($image['name']->getSize()))/1024;
+                            //Défini une taille max d'image
+                            if ($imageSizeKo > $maxFileSizeKo) {
+                                $this->addFlash('error','Taille max (5Mo)');  
+                                return $this->redirectToRoute('create_ad',['cityId'=>$cityId]); 
+                            }
+                            //upload de l'image
+                            $new_photo = $simpleUploadService->uploadImage($image_name);
+                            //compression si image trop lourde
+                            if ($imageSizeKo > $minFileSizeForCompressionKo ) {
+                                //Recherche le taux de compression à appliquer, et le passe au compresseur(compresse et redimensionne)
+                                $compressTaux =($minFileSizeForCompressionKo * 100)/$imageSizeKo;
+                                $imageCompressionService->compressImage($compressTaux,$new_photo);
+                                $new_photos->setName("compress_".$new_photo);
+                            }
+                            $ad->addPhoto($new_photos);
+                        }
                         $ad->setCity($form->get('city')->getData());
                     }
                     $em->persist($ad);
                     $em->flush();
-            
-                    return $this->redirectToRoute('app_home');
 
-                } else{
-                    $errorMessage = 'Postez au moins une photo SVP';
+                    $this->addFlash('success','Annonce postée avec grand succès');  
+                    return $this->redirectToRoute('app_home');
                 }
             }
         }
@@ -167,7 +176,7 @@ class AdsController extends AbstractController
         $selectedTransaction = $request->query->get('transaction', null);
         $selectedMinPrice = $request->query->get('minPrice', null);
         $selectedMaxPrice = $request->query->get('maxPrice', null);
-    
+       
         // Récupération des annonces sans filtres pour calculer le total
         $allAds = $adsRepository->findAll();
         
@@ -180,6 +189,7 @@ class AdsController extends AbstractController
             $selectedMinPrice,
             $selectedMaxPrice,
         );
+     
         //Tri des ads en ordre décroissant
         usort($ads, function($a, $b) {
             return $b->getCreatedAt() <=> $a->getCreatedAt();
@@ -187,7 +197,7 @@ class AdsController extends AbstractController
     
         // Pagination
         $currentPage = $request->query->getInt('page', 1);
-        $perPage = 9;
+        $perPage = 12;
         $totalItems = count($ads);
         $totalPages = ceil($totalItems / $perPage);
         $offset = ($currentPage - 1) * $perPage;

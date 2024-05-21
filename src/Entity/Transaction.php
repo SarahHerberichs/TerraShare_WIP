@@ -21,9 +21,13 @@ class Transaction
     #[ORM\OneToMany(mappedBy: 'Transaction', targetEntity: Ads::class)]
     private Collection $Status;
 
+    #[ORM\OneToMany(mappedBy: 'Transaction', targetEntity: TypeTransaction::class)]
+    private Collection $typeTransactions;
+
     public function __construct()
     {
         $this->Status = new ArrayCollection();
+        $this->typeTransactions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -67,6 +71,36 @@ class Transaction
             // set the owning side to null (unless already changed)
             if ($status->getTransaction() === $this) {
                 $status->setTransaction(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TypeTransaction>
+     */
+    public function getTypeTransactions(): Collection
+    {
+        return $this->typeTransactions;
+    }
+
+    public function addTypeTransaction(TypeTransaction $typeTransaction): static
+    {
+        if (!$this->typeTransactions->contains($typeTransaction)) {
+            $this->typeTransactions->add($typeTransaction);
+            $typeTransaction->setTransaction($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTypeTransaction(TypeTransaction $typeTransaction): static
+    {
+        if ($this->typeTransactions->removeElement($typeTransaction)) {
+            // set the owning side to null (unless already changed)
+            if ($typeTransaction->getTransaction() === $this) {
+                $typeTransaction->setTransaction(null);
             }
         }
 

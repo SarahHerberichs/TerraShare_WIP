@@ -5,9 +5,11 @@ namespace App\Form;
 use App\Entity\Ads;
 use App\Entity\Type;
 use App\Entity\Cities;
+use App\Entity\Departments;
 use App\Entity\Status;
 use App\Form\PhotosType;
 use App\Entity\Transaction;
+use Doctrine\ORM\Mapping\Entity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -24,7 +26,11 @@ class AdsType extends AbstractType
     {
         
         $builder
-            ->add('title', TextType::class)
+            ->add('title', TextType::class, [
+                'attr' => [
+                    'maxlength' => 45,
+                ],
+            ])
             ->add('text', TextareaType::class)
             
             ->add('city', EntityType::class, [
@@ -47,10 +53,10 @@ class AdsType extends AbstractType
                 'class' => Type::class,
                 'choice_label' => 'name',
             ])
-            ->add('transaction', EntityType::class, [
-                'class' => Transaction::class,
-                'choice_label' => 'name',
-            ])
+            // ->add('transaction', EntityType::class, [
+            //     'class' => Transaction::class,
+            //     'choice_label' => 'name',
+            // ])
             ->add('status', EntityType::class, [
                 'class' => Status::class,
                 'choice_label' => 'name',

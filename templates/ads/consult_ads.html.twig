@@ -9,8 +9,9 @@
     <form method="get" class="form-filter-ads">
         <input type="hidden" name="token" value="{{ csrf_token('filter_ad_token') }}">
         {# Filtre par département #}
+        <button id='reload-btn'>Réinitialiser</button>
         <div class="form-element block-department">
-            <label for="department">Filtrer par département :</label>
+            {# <label for="department">Filtrer par département :</label> #}
             <select name="department" id="department">
                 <option value="">Tous les départements</option>
                 {% for department in departments %}
@@ -20,9 +21,32 @@
                 {% endfor %}
             </select>
         </div>
+         <div class="form-element block-status">
+          {# Filtre par Status : Disponnible / Proposition #}
+            {# <label for="status">Filtrer par recherche :</label> #}
+            <div id="status">
+                {% for stat in status %}
+                    <input type="radio" id="status{{ stat.id }}" name="status" value="{{ stat.id }}"
+                        {% if stat.id == selectedStatus %}checked{% endif %}>
+                    <label for="status{{ stat.id }}">{{ stat.name }}</label>
+                {% endfor %}
+            </div>
+        </div>
+
+            {# Filtre par Status : Disponnible / Proposition #}
+            {# <label for="status">Filtrer par recherche :</label>
+            <select name="status" id="status">
+                <option value="">Proposition/Recherche</option>
+                {% for stat in status %}
+                    <option value="{{ stat.id }}" {% if stat.id == selectedStatus %}selected{% endif %}>
+                        {{ stat.name }}
+                    </option>
+                {% endfor %}
+            </select> #}
+        {# </div> #}
         <div class="form-element block-type">
             {# Filtre par type : Materiel/Terrain/Personne #}
-            <label for="type">Filtrer par type :</label>
+            <label for="type">Type d'annonce</label>
             <select name="type" id="type">
                 <option value="">Tous les types</option>
                 {% for type in types %}
@@ -34,7 +58,7 @@
         </div>
         <div class="form-element block-transaction">
             {# Filtre par transaction : vente/loc/service #}
-            <label for="transaction">Filtrer par transaction :</label>
+            <label for="transaction">Type de transaction </label>
             <select name="transaction" id="transaction">
                 <option value="">Toutes les transactions</option>
                 {% for transaction in transactions %}
@@ -44,18 +68,7 @@
                 {% endfor %}
             </select>
         </div>
-        <div class="form-element block-status">
-            {# Filtre par Status : Disponnible / Proposition #}
-            <label for="status">Filtrer par recherche :</label>
-            <select name="status" id="status">
-                <option value="">Proposition/Recherche</option>
-                {% for stat in status %}
-                    <option value="{{ stat.id }}" {% if stat.id == selectedStatus %}selected{% endif %}>
-                        {{ stat.name }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
+       
         <div class="form-element block-price">
             <label for="minPrice">Prix minimum :</label>
             <input type="number" name="minPrice" id="minPrice" min="0" placeholder="Min" value="{{ selectedMinPrice }}">
@@ -73,34 +86,45 @@
         <p>Aucune annonce pour votre requête.</p>
     {% else %}
         <ul class= "list-ads">
-            {% for ad in ads %}
+          
+            {% for ad in ads|slice(0, 12) %}
                 <a href="{{ path('app_consult_ad_by_id', {'id': ad.id}) }}" class="each-ad">
-                    <div class="text-content">
-                        <h3>{{ ad.title }}</h3> 
-                        <p> crée par {{ ad.user.pseudo }} </p>
-                            <p class='created-ad'> le {{ ad.createdAt|date('d/m/Y') }} à  {{ ad.createdAt|date('H:i:s') }}</p>
-                            <p class='city-name'> à {{ ad.city.name|capitalize }}</p>
-                        
-                        {% if ad.type is not null %}
-                            <p class="type"> Type : {{ ad.type.name }} </p>
-                        {% endif %}
-                        {% if ad.status is not null %}
-                            <p class="status"> Status : {{ ad.status.name }} </p>
-                        {% endif %}
-                        {% if ad.transaction is not null %}
-                            <p class="transaction"> Transaction : {{ ad.transaction.name }}</p>
-                        {% endif %}
-                        {% if ad.price is not null %}
-                            <p class="price">Prix : {{ ad.price }} €</p>
-                        {% endif %}
-                    </div>
-                    {% for photo in ad.photos %}
+                {% for photo in ad.photos %}
                         {% if loop.first %}
                             <div class="img-container img-list">
                                 <img src="{{ asset('img/' ~ photo.name)}}" alt="" class="main-img-ad img-list card-img-top mt-3">   
                             </div>
                         {% endif %}
                     {% endfor %}
+                    <div class="text-content">
+                        <h5>{{ ad.title }}</h5> 
+                        {% set now = 'now'|date('Y-m-d') %}
+                        {% set createdAt = ad.createdAt|date('Y-m-d') %}
+                        {% set difference = now|date_modify('midnight')|date('U') - createdAt|date('U') %}
+                        {% set days = difference / (24 * 3600) %}
+
+                        {% if days == 1 %}
+                            <p class="created-ad">Il y a 1 jour</p>
+                        {% elseif days > 1 %}
+                            <p class="created-ad">Il y a {{ days|round }} jours</p>
+                        {% else %}
+                            <p class="created-ad">Aujourd'hui</p>
+                        {% endif %}                        <p class='city-name'> à {{ ad.city.name|capitalize }}</p>
+                             {% if ad.status is not null %}
+                            <p class="status"> {{ ad.status.name }} , </p>
+                        {% endif %}
+                        {% if ad.type is not null %}
+                            <p class="type">  {{ ad.type.name }} ,</p>
+                        {% endif %}
+                       
+                        {% if ad.transaction is not null %}
+                            <p class="transaction">  {{ ad.transaction.name }}</p>
+                        {% endif %}
+                        {% if ad.price is not null %}
+                            <p class="price">Prix : {{ ad.price }} €</p>
+                        {% endif %}
+                    </div>
+                    
                 </a>
             {% endfor %}
         </ul>
@@ -124,4 +148,8 @@
         </ul>
     </nav>
     {% endif %}
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+    <script src="{{ asset('js/TypeTransaction.js') }}"></script>   
 {% endblock %}

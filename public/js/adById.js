@@ -12,34 +12,41 @@ document.addEventListener("DOMContentLoaded", function () {
   var popupImageContainer = document.getElementById("popupImageContainer");
   var nextArrow = document.getElementById("nextArrow");
   var currentIndex = 0;
-  var errorMsg = document.getElementById("errorMessage");
+  // var errorMsg = document.getElementById("errorMessage");
 
   // Initialisation popup
   popup.style.display = "none";
 
   // Gestion de l'événement clic sur le conteneur d'images
+  // imageContainer.addEventListener("click", function (event) {
   imageContainer.addEventListener("click", function (event) {
+    alert("ok");
     // Vérification si l'élément cliqué est une balise IMG
     if (event.target.tagName === "IMG") {
       // Conversion de la collection d'éléments IMG en tableau
       var imageElements = Array.from(
         imageContainer.getElementsByTagName("img")
       );
+
       //Récup et stocke l'index de l'élément IMG cliqué dans le tableau
       currentIndex = imageElements.indexOf(event.target);
+
       // Appel de la fonction d'ouverture de la popup avec l'index de l'image cliquée en paramètre
       openPopup(currentIndex);
     }
   });
 
   function openPopup(index) {
-    errorMsg.style.zIndex = "-100";
+    // errorMsg.style.zIndex = "-100";
     currentIndex = index;
     //crée une img avec une classe
     var popupImage = document.createElement("img");
+
     popupImage.classList.add("popup-image");
+
     //récupère la src de la balise image avec l'index passé en paramètre
     popupImage.src = imageContainer.getElementsByTagName("img")[index].src;
+
     popupImage.alt = "Popup Image";
 
     //Initialise à vide la div et lui injecte l'image paramétrée ci-dessus
@@ -63,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
     closePopup();
   });
   function closePopup() {
-    errorMsg.style.zIndex = "100";
+    // errorMsg.style.zIndex = "100";
     popup.style.display = "none";
     popupImageContainer.innerHTML = "";
   }

@@ -3,12 +3,13 @@
 {% block title %} {{sender.pseudo }} Envoyez un message à {{ receiver.email }} {% endblock %}
 
 {% block body %}
+  <h3>{{ ad.title}}</h3>
     {{sender.pseudo }} Envoyez un message à {{ receiver.email }}
     {{ form_start(form) }}
         {{form_row(form._token)}}
-        {{ form_row(form.title) }}
+        {{ form_row(form.title)}}
         {{ form_row(form.text) }}
-        
+      
         <button type="submit" class="btn btn-primary bg-dark">Envoyer</button>
     {{ form_end(form)}}
 

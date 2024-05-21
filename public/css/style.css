@@ -8,6 +8,12 @@
   width: auto;
   text-align: center;
 }
+.invisible {
+  display: none;
+}
+.visible {
+  display: block;
+}
 a {
   text-decoration: none;
 }
@@ -125,6 +131,9 @@ h2:before {
 .mes-annonces-btn {
   background-color: rgb(87, 189, 87);
 }
+nav {
+  text-align: center;
+}
 .navbar-nav {
   text-align: center;
   border-bottom: 1px solid #ccc; /* couleur et style de la barre */
@@ -136,6 +145,9 @@ h2:before {
 .nav-btns a {
   margin-top: 1em !important;
   margin-right: 1em;
+}
+.nav-item {
+  margin-right: 0;
 }
 .fa-user {
   font-size: 1.5em;
@@ -194,8 +206,13 @@ form {
 }
 
 .each-ad img {
-  width: 5em;
-  height: 5em;
+  width: 100%;
+  object-fit: cover;
+}
+.status,
+.type,
+.transaction {
+  display: inline;
 }
 .form-filter-ads {
   margin: auto;
@@ -204,7 +221,11 @@ form {
   flex-direction: column;
   margin-bottom: 2em;
 }
-.form-filter-ads div {
+/* .form-filter-ads div */
+.block-department,
+.block-price,
+.block-transaction,
+.block-type {
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -226,10 +247,10 @@ form {
 }
 
 .text-content {
-  grid-row: span 1;
+  /* grid-row: span 1; */
 }
 .text-content p {
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 .price-input {
   width: 15em;
@@ -239,9 +260,8 @@ form {
   height: 10em;
   cursor: pointer;
 }
-.img-container {
-  grid-row: span 1;
-  max-height: 50%;
+.img-container img {
+  height: 200px;
 }
 .each-user-ad {
   width: 80%;
@@ -318,6 +338,15 @@ form {
 .block-email input {
   height: 50%;
 }
+.btns-mailbox {
+  display: flex;
+  flex-direction: column;
+  width: 15em;
+  margin: auto;
+}
+.btns-mailbox > * {
+  margin-bottom: 0.5em;
+}
 .btn-send-message a {
   text-decoration: none;
 }
@@ -334,9 +363,11 @@ form {
 }
 .received-message {
   background-color: #f0f0f0;
+  border: 1px solid blue;
 }
 .sent-message {
   background-color: #add8e6;
+  border: 1px solid blue;
 }
 .btn-send-message {
   margin-top: 1em;
@@ -432,29 +463,38 @@ form {
     width: 60%;
   }
   .list-ads {
-    display: flex;
+    /* display: flex;
     flex-wrap: wrap;
     list-style-type: none;
     margin: 0;
     padding: 0;
     width: 90%;
-    margin: auto;
+    margin: auto; */
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-gap: 20px 25px;
+    padding: 20px;
   }
 
   .each-ad {
-    grid-template-columns: 1fr 1fr; /* Deux colonnes pour chaque élément .each-ad */
+    /* grid-template-columns: repeat(1, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    width: 30%;
-    min-width: 28em;
-    height: auto;
-    margin-right: 10px;
+    /* width: 30%;
+    min-width: 28em; */
+    height: 450px;
+
+    overflow: hidden;
+    text-overflow: ellipsis; /* Affiche "..." pour indiquer du contenu caché */
+  }
+  .each-ad img {
+    max-height: 200px;
   }
   .each-user-ad {
     width: 50%;
   }
   .text-content {
-    grid-column: 1; /* Place le texte dans la première colonne */
-    grid-row: span 3; /* Occupe trois lignes */
+    /* grid-column: 1;  */
+    /* grid-row: span 5; Occupe trois lignes */
   }
 
   .list-existing-photos {
@@ -464,8 +504,8 @@ form {
     margin: auto;
   }
   .img-container {
-    grid-column: 2; /* Place la photo dans la deuxième colonne */
-    grid-row: span 3; /* Occupe trois lignes */
+    /* grid-column: 2;  */
+    /* grid-row: span 3; */
   }
   .form-filter-ads {
     width: 50%;
@@ -475,5 +515,13 @@ form {
   }
   .each-message-conv {
     width: 60vw;
+  }
+  .received-message {
+    width: 50%;
+    margin: auto;
+  }
+  .sent-message {
+    width: 50%;
+    margin: auto;
   }
 }

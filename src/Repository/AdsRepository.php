@@ -60,18 +60,18 @@ class AdsRepository extends ServiceEntityRepository
             ->andWhere('tr.id = :transaction')
             ->setParameter('transaction', $transaction);
         }
-        
         if ($minPrice) {
-            $queryBuilder
-                ->andWhere('a.price >= :minPrice')
-                ->setParameter('minPrice', $minPrice);
+             $queryBuilder
+            ->andWhere('COALESCE(a.price, 0) >= :minPrice')
+            ->setParameter('minPrice', $minPrice);
         }
 
         if ($maxPrice) {
             $queryBuilder
-                ->andWhere('a.price <= :maxPrice')
-                ->setParameter('maxPrice', $maxPrice);
+            ->andWhere('COALESCE(a.price, 0) <= :maxPrice')
+            ->setParameter('maxPrice', $maxPrice);
         }
+        
     
         return $queryBuilder->getQuery()->getResult();
     }

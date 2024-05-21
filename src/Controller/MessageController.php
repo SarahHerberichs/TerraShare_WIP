@@ -74,7 +74,12 @@ class MessageController extends AbstractController
             //Cherche la conversation entre les deux parties autour de l'annonce
             $existingConversation = $conversationRepository->findConversationByUsersAndAd($sender, $receiver, $ad);
         
-            $form = $this->createForm(MessageType::class);
+            // $form = $this->createForm(MessageType::class);
+            // $form->handleRequest($request);
+            $form = $this->createForm(MessageType::class, null, [
+                'adTitle' => $ad->getTitle()
+            ]);
+        
             $form->handleRequest($request);
             //Insertion du nouveau message dans la BDD
             if ($form->isSubmitted() && $form->isValid()) {

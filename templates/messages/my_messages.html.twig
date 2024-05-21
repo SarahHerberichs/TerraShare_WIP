@@ -34,25 +34,27 @@
             <p class="full-text">{{ message.text }}</p>
             <button class="btn btn-reduce-text" style="display:none;"><i class="fa-sharp fa-solid fa-angles-up"></i></button>  
             {% if message.receiver == app.user %}
-                <p class='message-not-read' {% if message.isRead %} style="display: none;" {% endif %}>
-                    Message Non Lu <i class="far fa-envelope" style="color: red;"></i>
-                </p>
-                <p class='message-read' {% if not message.isRead %} style="display: none;" {% endif %}>Message lu <i class="fas fa-check-circle" style="color: green;"></i></p>
-                
-                {% if not message.isRead %}
-                    <button class="mark-as-read" data-message-id="{{ message.id }}">Marquer comme lu</button>
+                <div class='btns-mailbox'>
+                    <p class='message-not-read' {% if message.isRead %} style="display: none;" {% endif %}>
+                        Message Non Lu <i class="far fa-envelope" style="color: red;"></i>
+                    </p>
+                    <p class='message-read' {% if not message.isRead %} style="display: none;" {% endif %}>Message lu <i class="fas fa-check-circle" style="color: green;"></i></p>
+                    
+                    {% if not message.isRead %}
+                        <button class="mark-as-read" data-message-id="{{ message.id }}">Marquer comme lu</button>
+                    {% endif %}
+                    {% if message.ad is not null %}
+                        <button class='send-message btn btn-info' {% if message.isRead %} style="display: none;" {% endif %}>
+                        <a href="{{ path('app_sendMessage', {'adId': message.ad.id, 'messageId': message.id}) }}">Répondre</a></button>
+                    {% endif %}
                 {% endif %}
+                    {# <button class="view-conversation btn btn-secondary"> #}
                 {% if message.ad is not null %}
-                    <button class='send-message btn btn-info' {% if message.isRead %} style="display: none;" {% endif %}>
-                    <a href="{{ path('app_sendMessage', {'adId': message.ad.id, 'messageId': message.id}) }}">Répondre</a></button>
+                    <a href="{{ path('app_show_conversation', { 'messageId': message.id}) }}" class="btn btn-secondary my-messages-btn">Voir la conversation</a>
+                {% else %}
+                    <p> l'annonce a été supprimée' <p>
                 {% endif %}
-            {% endif %}
-            {# <button class="view-conversation btn btn-secondary"> #}
-            {% if message.ad is not null %}
-                <a href="{{ path('app_show_conversation', { 'messageId': message.id}) }}" class="btn btn-secondary my-messages-btn">Voir la conversation</a>
-           {% else %}
-           <p> l'annonce a été supprimée' <p>
-           {% endif %}
+                </div>
             {# </button> #}
         </div>
        
