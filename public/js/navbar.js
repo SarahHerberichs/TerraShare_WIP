@@ -5,7 +5,7 @@ function updateUnreadMessagesCount() {
   );
   if (unreadMessagesCountElement !== null) {
     var route = unreadMessagesCountElement.dataset.route;
-    console.log(route);
+
     //Fetch dans l'url (géré par MessageControlleur) et met à jour l'élément qui contient le nb de msg non lus
     fetch(route)
       .then((response) => response.json())

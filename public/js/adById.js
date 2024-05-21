@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // Gestion de l'événement clic sur le conteneur d'images
   // imageContainer.addEventListener("click", function (event) {
   imageContainer.addEventListener("click", function (event) {
-    alert("ok");
     // Vérification si l'élément cliqué est une balise IMG
     if (event.target.tagName === "IMG") {
       // Conversion de la collection d'éléments IMG en tableau

@@ -31,7 +31,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-
+use Symfony\Component\Validator\Constraints\Length;
 
 class AdsController extends AbstractController
 {
@@ -105,16 +105,21 @@ class AdsController extends AbstractController
             //Si le token est valide
             } else {
                 $files = $request->files->all();
-                $images = $files['ads']['photos'];
-                $maxFileSizeKo = 5000;
-                $minFileSizeForCompressionKo = 500;
-                //si pas de photos loadée...
+                //Si aucune photo ajoutée -- ERREUR
                 if (empty($files)){
                     $errorMessage = 'Postez au moins une photo SVP';
+                //SI photo ajoutée 
                 } else{
+                    $images = $files['ads']['photos'];
+                    //Taille max acceptée et taille min permettant la compression
+                    $maxFileSizeKo = 5000;
+                    $minFileSizeForCompressionKo = 500;
+                    //Chaque fichier loadé : "$image"
                     foreach($images as $image){
+                        //Pour une nouvelle instance de Photos
                         $new_photos = new Photos();
                         $image_name = $image['name'];
+                       
                         $image_original_name = $image_name->getClientOriginalName();
                         
                         // Vérifier si le nom de fichier contient une extension valide
@@ -123,23 +128,31 @@ class AdsController extends AbstractController
                         if (!in_array($extension, ['jpg', 'jpeg', 'png'])) {
                          $this->addFlash('error','Extension non prise en charge (jpg, jpeg, png sont autorisés)');  
                          return $this->redirectToRoute('create_ad',['cityId'=>$cityId]); 
+                         //Si extension ok
                         } else {
                             $imageSizeKo = (($image['name']->getSize()))/1024;
-                            //Défini une taille max d'image
+                            //Si taille img trop grande meme pour passer au compresseur, ERREUR
                             if ($imageSizeKo > $maxFileSizeKo) {
                                 $this->addFlash('error','Taille max (5Mo)');  
                                 return $this->redirectToRoute('create_ad',['cityId'=>$cityId]); 
                             }
                             //upload de l'image
                             $new_photo = $simpleUploadService->uploadImage($image_name);
-                            //compression si image trop lourde
+                           
+                            //Si taille ok pour etre compressée
                             if ($imageSizeKo > $minFileSizeForCompressionKo ) {
+                            
                                 //Recherche le taux de compression à appliquer, et le passe au compresseur(compresse et redimensionne)
                                 $compressTaux =($minFileSizeForCompressionKo * 100)/$imageSizeKo;
                                 $imageCompressionService->compressImage($compressTaux,$new_photo);
                                 $new_photos->setName("compress_".$new_photo);
                             }
+                            else {
+                                $new_photos->setName($new_photo);
+                            }
                             $ad->addPhoto($new_photos);
+                           
+                     
                         }
                         $ad->setCity($form->get('city')->getData());
                     }
@@ -159,7 +172,7 @@ class AdsController extends AbstractController
             'errorMessage' => $errorMessage
         ]);
     }
-   
+  
     #[Route('/consult-ads', name: 'app_consult_ads')]
     public function consultAds(
         Request $request,
@@ -169,6 +182,11 @@ class AdsController extends AbstractController
         TransactionRepository $transactionRepository,
         StatusRepository $statusRepository
     ): Response {
+        $defaultFilters = [
+            'selectedType' => null, // Mettez la valeur par défaut pour le type
+            'selectedTransaction' => null, // Mettez la valeur par défaut pour la transaction
+            // Ajoutez d'autres valeurs par défaut pour d'autres filtres si nécessaire
+        ];
 
         $selectedDepartment = $request->query->get('department', null);
         $selectedType = $request->query->get('type', null);
@@ -189,7 +207,7 @@ class AdsController extends AbstractController
             $selectedMinPrice,
             $selectedMaxPrice,
         );
-     
+  
         //Tri des ads en ordre décroissant
         usort($ads, function($a, $b) {
             return $b->getCreatedAt() <=> $a->getCreatedAt();
@@ -224,6 +242,7 @@ class AdsController extends AbstractController
             'currentPage' => $currentPage,
             'totalItems' => $totalItems, 
             'allAds' => $allAds, 
+            'defaultFilters' => $defaultFilters,
         ]);
     }
     

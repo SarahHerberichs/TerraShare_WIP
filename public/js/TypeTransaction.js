@@ -1,46 +1,11 @@
-// document.addEventListener("DOMContentLoaded", function () {
-//   const selectedType = document.getElementById("type");
-
-//   // Votre code JavaScript ici
-//   selectedType.addEventListener("change", function () {
-//     const selectedTypeId = this.value;
-//     console.log(selectedTypeId);
-//     if (selectedTypeId > 0) {
-//       fetch("/get-transactions/" + selectedTypeId)
-//         .then((response) => response.json())
-//         .then((data) => {
-//           const transactionSelect = document.getElementById("transaction");
-
-//           transaction.innerHTML = "";
-//           const Emptyoption = document.createElement("option");
-//           Emptyoption.value = "";
-//           Emptyoption.text = "Toutes les transactions";
-//           transactionSelect.appendChild(Emptyoption);
-//           data.forEach((transaction) => {
-//             const option = document.createElement("option");
-//             option.value = transaction.id;
-//             option.text = transaction.name;
-//             transactionSelect.appendChild(option);
-//           });
-//         })
-//         .catch((error) => console.error("error fetching transaction", error));
-//     } else {
-//       console.log("rien de selectionné");
-//     }
-//   });
-// });
 document.addEventListener("DOMContentLoaded", function () {
-  const reloadBtn = document.getElementById("reload-btn");
-  reloadBtn.addEventListener("click", function () {
-    location.reload();
-  });
   const selectedType = document.getElementById("type");
+  //Pour ajout annonce: ads_type
   const selectedTransaction = document.getElementById("transaction");
-
-  // Enregistrez les valeurs initiales sélectionnées
+  //Pour ajout annonce : ads_transaction
   const initialTypeValue = selectedType.value;
   const initialTransactionValue = selectedTransaction.value;
-
+  //VISIBLE INVISIBLE SELON TYPE SELECTIONNE OU NON
   if (initialTypeValue > 1) {
     selectedTransaction.classList.add("visible");
     selectedTransaction.classList.remove("invisible");
@@ -48,24 +13,28 @@ document.addEventListener("DOMContentLoaded", function () {
     selectedTransaction.classList.remove("visible");
     selectedTransaction.classList.add("invisible");
   }
-  // Gestionnaire d'événements pour le changement de sélection du type
+
+  //A CHAQUE Changement de type,
+  //Si UN type  est selectionné, affiche les transaction associées
+  //en fetchant dans (controlleur typetransaction)
   selectedType.addEventListener("change", function () {
     const selectedTypeId = this.value;
-
+    //Visible Invisible + fetch pour afficher les choix de transact associé au type
     if (selectedTypeId > 0) {
       selectedTransaction.classList.add("visible");
       selectedTransaction.classList.remove("invisible");
+      //Recupere transactions a afficher selon selection du type
       fetch("/get-transactions/" + selectedTypeId)
         .then((response) => response.json())
         .then((data) => {
-          // Réinitialiser la liste des transactions
+          // type transaction remis à zéro
           selectedTransaction.innerHTML = "";
           const emptyOption = document.createElement("option");
           emptyOption.value = "";
           emptyOption.text = "Toutes les transactions";
           selectedTransaction.appendChild(emptyOption);
 
-          // Ajouter les nouvelles transactions
+          // Ajout des nouvelles transactions
           data.forEach((transaction) => {
             const option = document.createElement("option");
             option.value = transaction.id;
@@ -73,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
             selectedTransaction.appendChild(option);
           });
 
-          // Restaurer la valeur initiale si elle existe
+          // Restaure la valeur initiale si elle existe
           if (initialTransactionValue) {
             selectedTransaction.value = initialTransactionValue;
           }
@@ -86,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Restaurer la valeur initiale du type après la soumission du formulaire
+  // Restaure la valeur initiale du type après la soumission du formulaire
   if (initialTypeValue) {
     selectedType.value = initialTypeValue;
     // Déclencher l'événement de changement manuellement pour mettre à jour les transactions

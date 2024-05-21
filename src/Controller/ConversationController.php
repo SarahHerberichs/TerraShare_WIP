@@ -20,7 +20,7 @@ class ConversationController extends AbstractController
        ConversationRepository $conversationRepository
     ): Response
     {
-        
+    
         //Recup l'utilisateur actuellement authentifié
     //     $currentUser = $tokenStorage->getToken()->getUser();
        
@@ -53,9 +53,8 @@ class ConversationController extends AbstractController
     // Récupérer le message qui vient d'être cliqué
     $message = $messageRepository->find($messageId);
 
-    // Vérifier si le message existe et si l'annonce associée n'est pas null
-    if (!$message || $message->getAd() === null) {
-
+    // Erreur si message ou annonce existent pas
+    if (!$message || !$message->getAd() === null) {
         return $this->redirectToRoute('error_page');
     }
 
@@ -64,7 +63,6 @@ class ConversationController extends AbstractController
 
     if($conversation) {
        $messages=$conversation->getMessage();
-    
         return $this->render('messages/show_conversation.html.twig', [
          'conversation' => $conversation,
          'messages' => $messages,

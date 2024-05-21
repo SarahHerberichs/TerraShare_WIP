@@ -49,11 +49,11 @@
                     {% endif %}
                 {% endif %}
                     {# <button class="view-conversation btn btn-secondary"> #}
-                {% if message.ad is not null %}
+                {# {% if message.ad is not null %} #}
                     <a href="{{ path('app_show_conversation', { 'messageId': message.id}) }}" class="btn btn-secondary my-messages-btn">Voir la conversation</a>
-                {% else %}
+                {# {% else %}
                     <p> l'annonce a été supprimée' <p>
-                {% endif %}
+                {% endif %} #}
                 </div>
             {# </button> #}
         </div>

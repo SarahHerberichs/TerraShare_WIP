@@ -3,7 +3,12 @@
 
 {% block body %}
     <h2>Conversation pour l'annonce :</h2>
-    <h3>{{conversation.ad.title}}</h3>
+    {% if conversation.ad %} 
+        <h3>{{conversation.ad.title}}</h3>
+    {% else %}
+        <h3> Annonce supprimée </h3>
+    {% endif %}
+    
       
     {% for message in messages|reverse %}
       
@@ -29,10 +34,12 @@
                         <p class='message-not-read' {% if message.isRead %} style="display: none;" {% endif %}>
                         Message Non Lu <i class="far fa-envelope" style="color: red;"></i>
                         </p>
+                    {% if conversation.ad %}
                         <p class='message-read' {% if not message.isRead %} style="display: none;" {% endif %}>Message lu <i class="fas fa-check-circle" style="color: green;"></i></p>
                         {% if not message.isRead %}<button class="mark-as-read" data-message-id="{{ message.id }}">Marquer comme lu</button> {% endif %}
                         {% if message.sender %}
                             <a href="{{ path('app_sendMessage', {'adId': message.ad.id, 'messageId': message.id}) }}" class="btn btn-primary bg-dark btn-repondre">Répondre</a>
+                        {% endif %}
                         {% endif %}
                     </div>
                  </div>

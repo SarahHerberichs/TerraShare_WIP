@@ -53,10 +53,10 @@ class AdsType extends AbstractType
                 'class' => Type::class,
                 'choice_label' => 'name',
             ])
-            // ->add('transaction', EntityType::class, [
-            //     'class' => Transaction::class,
-            //     'choice_label' => 'name',
-            // ])
+            ->add('transaction', EntityType::class, [
+                'class' => Transaction::class,
+                'choice_label' => 'name',
+            ])
             ->add('status', EntityType::class, [
                 'class' => Status::class,
                 'choice_label' => 'name',

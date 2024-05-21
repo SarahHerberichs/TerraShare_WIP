@@ -9,7 +9,8 @@
     <form method="get" class="form-filter-ads">
         <input type="hidden" name="token" value="{{ csrf_token('filter_ad_token') }}">
         {# Filtre par département #}
-        <button id='reload-btn'>Réinitialiser</button>
+        <button id='reload-btn'><a class="nav-link" href="{{path('app_consult_ads')}}">Réinitialiser Filtres</a></button>
+        
         <div class="form-element block-department">
             {# <label for="department">Filtrer par département :</label> #}
             <select name="department" id="department">
