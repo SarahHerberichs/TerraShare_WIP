@@ -14,6 +14,18 @@
 .visible {
   display: block;
 }
+/* permet placement footer */
+body,
+html {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+.content {
+  flex: 1;
+}
+/* */
 a {
   text-decoration: none;
 }
@@ -246,12 +258,6 @@ form {
   text-overflow: ellipsis;
 }
 
-.text-content {
-  /* grid-row: span 1; */
-}
-.text-content p {
-  /* overflow: hidden; */
-}
 .price-input {
   width: 15em;
 }
@@ -411,6 +417,18 @@ form {
 #nextArrow {
   right: 70px;
 }
+
+.footer {
+  margin-top: 1em;
+  padding: 2em;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.footer > a {
+  margin-right: 2em;
+  color: whitesmoke;
+}
 @media screen and (min-width: 992px) {
   .main {
     margin: 2em;
@@ -463,15 +481,7 @@ form {
     width: 60%;
   }
   .list-ads {
-    /* display: flex;
-    flex-wrap: wrap;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    width: 90%;
-    margin: auto; */
     width: 100%;
-    border: 1px solid red;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-gap: 20px 25px;
@@ -479,10 +489,6 @@ form {
   }
 
   .each-ad {
-    /* grid-template-columns: repeat(1, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    /* width: 30%;
-    min-width: 28em; */
     height: 450px;
 
     overflow: hidden;
@@ -494,20 +500,12 @@ form {
   .each-user-ad {
     width: 50%;
   }
-  .text-content {
-    /* grid-column: 1;  */
-    /* grid-row: span 5; Occupe trois lignes */
-  }
 
   .list-existing-photos {
     width: 80%;
     display: flex;
     justify-content: space-evenly;
     margin: auto;
-  }
-  .img-container {
-    /* grid-column: 2;  */
-    /* grid-row: span 3; */
   }
   .form-filter-ads {
     width: 50%;

@@ -17,7 +17,9 @@
                 label: 'Password'
             }) }}
             {{ form_row(registrationForm.pseudo )}}
-            {{ form_row(registrationForm.agreeTerms) }}
+            {{ form_row(registrationForm.agreeTerms, {'label' : "En cochant cette case, je déclare être Majeur et accepter les CGU du site" }) }}
+            
+            
     
             <button type="submit" class="btn bg-dark">Register</button>
         {{ form_end(registrationForm) }}

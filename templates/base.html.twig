@@ -22,28 +22,28 @@
     </head>
 
     <body>
+    <div class="content">
+        {% include "_partials/navbar.html.twig" %}  
 
-    {% include "_partials/navbar.html.twig" %}  
-
-    {% if app.user and app.user.isVerified ==false %}
-        <div class="alert alert-danger alert-dissmissible fade show w-50 mx-auto mt-3" role="alert">
-            <strong>ATTENTION</strong>  
-            <p>Votre compte n'a pas été activé ! </p>
-            <p>Merci de valider votre compte via le lien envoyé sur votre boite mail lors de l'inscription</p>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    {% else %}
-        {% if app.user and app.user.isVerified ==true %}
-            <p>{{ app.user.pseudo }} : Connecté</p>
+        {% if app.user and app.user.isVerified ==false %}
+            <div class="alert alert-danger alert-dissmissible fade show w-50 mx-auto mt-3" role="alert">
+                <strong>ATTENTION</strong>  
+                <p>Votre compte n'a pas été activé ! </p>
+                <p>Merci de valider votre compte via le lien envoyé sur votre boite mail lors de l'inscription</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% else %}
+            {% if app.user and app.user.isVerified ==true %}
+                <p>{{ app.user.pseudo }} : Connecté</p>
+            {% endif %}
         {% endif %}
-    {% endif %}
 
-    {% include "_partials/alerts.html.twig" %}
-    <div class="main-container">
-        {% block body %}
-        {% endblock %}
+        {% include "_partials/alerts.html.twig" %}
+        <div class="main-container">
+            {% block body %}
+            {% endblock %}
+        </div>
     </div>
-
     </body>
-
+  {% include "_partials/footer.html.twig" %} 
 </html>

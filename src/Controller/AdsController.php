@@ -105,64 +105,69 @@ class AdsController extends AbstractController
             //Si le token est valide
             } else {
                 $files = $request->files->all();
-                //Si aucune photo ajoutée -- ERREUR
-                if (empty($files)){
+                //Si annonce d'offre et pas de photo
+                if (empty($files) && $request->get('ads')['status'] == 2 ){
                     $errorMessage = 'Postez au moins une photo SVP';
-                //SI photo ajoutée 
+                //Si c'est une demande ou une offre avec une photo
                 } else{
-                    $images = $files['ads']['photos'];
-                    //Taille max acceptée et taille min permettant la compression
-                    $maxFileSizeKo = 5000;
-                    $minFileSizeForCompressionKo = 500;
-                    //Chaque fichier loadé : "$image"
-                    foreach($images as $image){
-                        //Pour une nouvelle instance de Photos
-                        $new_photos = new Photos();
-                        $image_name = $image['name'];
+                    //Si c'est une offre avec photo, traitement photo ou une demande avec photo
+                //    if ($request->get('ads')['status'] == 2 || $request->get('ads')['status'] == 1 &&  $files) {
+                        $images = $files['ads']['photos'];
+                        //Taille max acceptée et taille min permettant la compression
+                        $maxFileSizeKo = 5000;
+                        $minFileSizeForCompressionKo = 500;
+                        //Chaque fichier loadé : "$image"
+                        foreach($images as $image){
+                           //Pour une nouvelle instance de Photos
+                           $new_photos = new Photos();
+                            $image_name = $image['name'];
                        
-                        $image_original_name = $image_name->getClientOriginalName();
-                        
-                        // Vérifier si le nom de fichier contient une extension valide
-                        $extension = strtolower(pathinfo($image_original_name, PATHINFO_EXTENSION));
-                        //Si mauvaise extension...
-                        if (!in_array($extension, ['jpg', 'jpeg', 'png'])) {
-                         $this->addFlash('error','Extension non prise en charge (jpg, jpeg, png sont autorisés)');  
-                         return $this->redirectToRoute('create_ad',['cityId'=>$cityId]); 
-                         //Si extension ok
-                        } else {
-                            $imageSizeKo = (($image['name']->getSize()))/1024;
-                            //Si taille img trop grande meme pour passer au compresseur, ERREUR
-                            if ($imageSizeKo > $maxFileSizeKo) {
-                                $this->addFlash('error','Taille max (5Mo)');  
-                                return $this->redirectToRoute('create_ad',['cityId'=>$cityId]); 
-                            }
-                            //upload de l'image
-                            $new_photo = $simpleUploadService->uploadImage($image_name);
-                           
-                            //Si taille ok pour etre compressée
-                            if ($imageSizeKo > $minFileSizeForCompressionKo ) {
-                            
-                                //Recherche le taux de compression à appliquer, et le passe au compresseur(compresse et redimensionne)
-                                $compressTaux =($minFileSizeForCompressionKo * 100)/$imageSizeKo;
-                                $imageCompressionService->compressImage($compressTaux,$new_photo);
-                                $new_photos->setName("compress_".$new_photo);
-                            }
-                            else {
-                                $new_photos->setName($new_photo);
-                            }
-                            $ad->addPhoto($new_photos);
-                           
-                     
-                        }
-                        $ad->setCity($form->get('city')->getData());
-                    }
-                    $em->persist($ad);
-                    $em->flush();
+                            $image_original_name = $image_name->getClientOriginalName();
 
+                            // Vérifier si le nom de fichier contient une extension valide
+                            $extension = strtolower(pathinfo($image_original_name, PATHINFO_EXTENSION));
+                        //Si mauvaise extension...
+                            if (!in_array($extension, ['jpg', 'jpeg', 'png'])) {
+                             $this->addFlash('error','Extension non prise en charge (jpg, jpeg, png sont autorisés)');  
+                             return $this->redirectToRoute('create_ad',['cityId'=>$cityId]); 
+                             //Si extension ok
+                            } else {
+                                $imageSizeKo = (($image['name']->getSize()))/1024;
+                                //Si taille img trop grande meme pour passer au compresseur, ERREUR
+                                if ($imageSizeKo > $maxFileSizeKo) {
+                                    $this->addFlash('error','Taille max (5Mo)');  
+                                    return $this->redirectToRoute('create_ad',['cityId'=>$cityId]); 
+                                }
+                                //upload de l'image
+                                $new_photo = $simpleUploadService->uploadImage($image_name);
+                            
+                                //Si taille ok pour etre compressée
+                                if ($imageSizeKo > $minFileSizeForCompressionKo ) {
+                            
+                                    //Recherche le taux de compression à appliquer, et le passe au compresseur(compresse et redimensionne)
+                                    $compressTaux =($minFileSizeForCompressionKo * 100)/$imageSizeKo;
+                                    $imageCompressionService->compressImage($compressTaux,$new_photo);
+                                    $new_photos->setName("compress_".$new_photo);
+                                }
+                                else {
+                                    $new_photos->setName($new_photo);
+                                }
+                                $ad->addPhoto($new_photos);
+                            
+                            }
+                        }
+                //    }
+                   //Si demande sans photo ou offre avec photo qui vient d'etre traité, ajout BDD
+                   $ad->setCity($form->get('city')->getData());
+                   $em->persist($ad);
+                   $em->flush();
+                   
                     $this->addFlash('success','Annonce postée avec grand succès');  
                     return $this->redirectToRoute('app_home');
                 }
+
             }
+
         }
 
         //Affichage du formulaire dans le template
