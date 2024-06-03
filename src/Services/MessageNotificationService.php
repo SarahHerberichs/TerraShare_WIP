@@ -22,7 +22,7 @@ class MessageNotificationService
         // Construction de l'e-mail pour informer l'utilisateur du nouveau message
         $email = (new TemplatedEmail())
         
-            ->from(new Address('terrashare@outlook.fr', 'Administrateur TerraShare'))
+            ->from(new Address('admin@terrashare.fr', 'Administrateur TerraShare'))
             ->to($user->getEmail())
             ->subject('Nouveau message reçu')
             ->htmlTemplate('messages/new_message_notification.html.twig')

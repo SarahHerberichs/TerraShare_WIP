@@ -33,13 +33,13 @@ class AdsType extends AbstractType
             ])
             ->add('text', TextareaType::class)
             
-            ->add('city', EntityType::class, [
-                'class' => Cities::class,
-                'data' => $options['city'], 
-                'mapped' => false,
-                'choice_label' => 'name', 
-                'attr' => ['style' => 'display:none;'], 
-            ])
+            // ->add('city', EntityType::class, [
+            //     'class' => Cities::class,
+            //     'data' => $options['city'], 
+            //     'mapped' => false,
+            //     'choice_label' => 'name', 
+            //     'attr' => ['style' => 'display:none;'], 
+            // ])
 
             ->add('photos', CollectionType::class, [
                 'entry_type'=> PhotosType::class,
@@ -65,7 +65,7 @@ class AdsType extends AbstractType
                 'required' => false,
                 'currency' => 'EUR',
                 'attr' => [
-                    'class' => 'form-control', 
+                'class' => 'form-control', 
                  
                 ],
             ]);

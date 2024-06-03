@@ -158,7 +158,8 @@ class AdsController extends AbstractController
                         }
                 //    }
                    //Si demande sans photo ou offre avec photo qui vient d'etre traité, ajout BDD
-                   $ad->setCity($form->get('city')->getData());
+                //    $ad->setCity($form->get('city')->getData());
+                    $ad->setCity($city);
                    $em->persist($ad);
                    $em->flush();
                    
@@ -169,7 +170,7 @@ class AdsController extends AbstractController
             }
 
         }
-
+   
         //Affichage du formulaire dans le template
         return $this->render('ads/create_ad.html.twig', [
             'form' => $form->createView(),
